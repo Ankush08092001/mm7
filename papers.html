@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Papers - MarineMonks</title>
+    <meta name="description" content="Access and download previous year MEO Class 4 examination papers with solutions from MarineMonks. Filter by function and center.">
+    <link rel="stylesheet" href="css/consolidated.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="canonical" href="https://www.marinemonks.in/papers.html">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <style>
+        /* Additional styles specific to papers page */
+        .papers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .paper-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        
+        .paper-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .paper-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .paper-header h3 {
+            margin-bottom: 10px;
+            font-size: 1.4rem;
+        }
+        
+        .paper-header p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        .paper-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+            opacity: 0.3;
+        }
+        
+        .paper-content {
+            padding: 20px;
+        }
+        
+        .paper-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .paper-info-item {
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .paper-info-item:hover {
+            transform: translateY(-3px);
+        }
+        
+        .paper-info-item span {
+            display: block;
+        }
+        
+        .paper-info-item .value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .paper-info-item .label {
+            font-size: 0.8rem;
+            color: #777;
+            text-transform: uppercase;
+        }
+        
+        .paper-description {
+            margin-bottom: 20px;
+            color: #555;
+        }
+        
+        .paper-footer {
+            padding: 15px 20px;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+        
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .filter-btn {
+            padding: 8px 16px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .search-bar {
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 15px 20px;
+            padding-left: 45px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .search-bar input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+            outline: none;
+        }
+        
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+        
+        .paper-count {
+            margin-bottom: 20px;
+            font-weight: 500;
+            color: #555;
+            padding: 10px 15px;
+            background-color: #f5f9ff;
+            border-radius: var(--border-radius);
+            display: inline-block;
+        }
+        
+        .paper-download {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+            transition: transform 0.2s ease;
+        }
+        
+        .paper-download:hover {
+            transform: translateX(5px);
+        }
+        
+        .paper-download i {
+            color: var(--secondary-color);
+        }
+        
+        .paper-download a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .paper-download a:hover {
+            text-decoration: underline;
+        }
+        
+        .btn {
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* New styles for subject categorization */
+        .subject-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+
+        .subject-tab-btn {
+            padding: 12px 20px;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--dark-text);
+            transition: all 0.3s ease;
+        }
+
+        .subject-tab-btn:hover {
+            background-color: #e0e0e0;
+        }
+
+        .subject-tab-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .subject-content {
+            display: none;
+        }
+
+        .subject-content.active {
+            display: block;
+        }
+
+        .filter-options {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-options select {
+            flex: 1;
+            min-width: 150px;
+            padding: 10px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-family: inherit;
+            box-shadow: var(--box-shadow);
+            transition: all 0.3s ease;
+        }
+
+        .filter-options select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.2);
+            outline: none;
+        }
+
+        .paper-item {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .paper-item h4 {
+            margin: 0;
+            font-size: 1.3rem;
+            color: var(--primary-color);
+        }
+
+        .paper-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .paper-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .paper-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            display: inline-block;
+            background-color: #e0f7fa;
+            color: var(--primary-color);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .paper-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .paper-actions button {
+            padding: 10px 18px;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+        }
+
+        .paper-actions button.preview-btn {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .paper-actions button.preview-btn:hover {
+            background-color: #00a080;
+            transform: translateY(-2px);
+        }
+
+        .paper-actions button.download-btn {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .paper-actions button.download-btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .paper-actions svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* PDF Preview Modal (re-used from probables) */
+        .pdf-modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.8); /* Black w/ opacity */
+            justify-content: center;
+            align-items: center;
+        }
+        .pdf-modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 90%;
+            height: 90%;
+            display: flex;
+            flex-direction: column;
+            border-radius: 8px;
+        }
+        .pdf-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 15px;
+        }
+        .pdf-modal-header h3 {
+            margin: 0;
+            color: #333;
+        }
+        .pdf-modal-close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .pdf-modal-close:hover,
+        .pdf-modal-close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .pdf-viewer-frame {
+            flex-grow: 1;
+            border: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .subject-tabs {
+                flex-direction: column;
+            }
+            .filter-options {
+                flex-direction: column;
+            }
+        }
+    </style>
+<script src="js/navigation.js" defer></script>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo" aria-label="MarineMonks Home">
+                    <img src="images/logo/logo-new.webp" alt="MarineMonks Logo" width="50" height="50" loading="lazy">
+                    <span class="logo-text">MarineMonks</span>
+                </a>
+                
+                <div class="mobile-menu-toggle" aria-expanded="false" aria-label="Toggle navigation menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+                
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="study-material.html">Study Material</a></li>
+                    <li><a href="mock-tests.html">Mock Tests</a></li>
+                    <li><a href="papers.html" class="active">Papers</a></li>
+                    <li><a href="probables.html">Probables</a></li>
+                </ul>
+                
+                <div class="auth-buttons">
+                    <a href="login.html" class="btn btn-outline">Login</a>
+                    <a href="signup.html" class="btn btn-primary">Sign Up</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+    <!-- Hero Section -->
+    <section class="hero" id="main-content">
+        <div class="container">
+            <div class="badge animate-fade-in">
+                Every Paper Solved = 1% Closer
+            </div>
+            
+            <h1 class="animate-fade-in delay-100">Previous Year <span class="highlight">Papers</span></h1>
+            
+            <p class="animate-fade-in delay-200">
+                Access previous year MEO Class 4 examination papers with detailed solutions and explanations.
+            </p>
+            
+            <div class="scroll-indicator">
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- Papers Section -->
+    <section class="papers">
+        <div class="container">
+            <!-- Search Bar -->
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="paperSearchInput" placeholder="Search for papers...">
+            </div>
+            
+            <!-- Subject Tabs -->
+            <div class="subject-tabs">
+                <button class="subject-tab-btn active" data-subject="MEK-G">MEK-G</button>
+                <button class="subject-tab-btn" data-subject="MEK-M">MEK-M</button>
+                <button class="subject-tab-btn" data-subject="MET">MET</button>
+                <button class="subject-tab-btn" data-subject="MEP">MEP</button>
+                <button class="subject-tab-btn" data-subject="NAVAL">NAVAL</button>
+                <button class="subject-tab-btn" data-subject="SSEP">SSEP</button>
+            </div>
+
+            <!-- Filter Options (Year & Topic) -->
+            <div class="filter-options">
+                <select id="yearFilter">
+                    <option value="all">Filter by Year</option>
+                    <!-- Years will be populated by JS -->
+                </select>
+                <select id="topicFilter">
+                    <option value="all">Filter by Topic</option>
+                    <!-- Topics will be populated by JS -->
+                </select>
+            </div>
+
+            <!-- Papers Display Area -->
+            <div id="papersDisplay">
+                <!-- Papers will be loaded here by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- PDF Preview Modal -->
+    <div id="pdfPreviewModal" class="pdf-modal">
+        <div class="pdf-modal-content">
+            <div class="pdf-modal-header">
+                <h3 id="pdfModalTitle"></h3>
+                <span class="pdf-modal-close">&times;</span>
+            </div>
+            <iframe id="pdfViewerFrame" class="pdf-viewer-frame" frameborder="0"></iframe>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <a href="index.html" class="footer-logo">
+                    <img src="images/logo/logo-new.webp" alt="MarineMonks Logo" width="40">
+                    MarineMonks
+                </a>
+                <p>Your ultimate guide to acing MEO Class 4 exams. Comprehensive study materials, mock tests, and expert guidance.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="study-material.html">Study Material</a></li>
+                    <li><a href="mock-tests.html">Mock Tests</a></li>
+                    <li><a href="papers.html">Papers</a></li>
+                    <li><a href="probables.html">Probables</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                    <li><a href="terms-of-service.html">Terms of Service</a></li>
+                    <li><a href="refund-policy.html">Refund Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contact Us</h4>
+                <ul class="contact-info">
+                    <li><i class="fas fa-map-marker-alt"></i> 123 Marine Drive, Mumbai, India</li>
+                    <li><i class="fas fa-phone"></i> +91 98765 43210</li>
+                    <li><i class="fas fa-envelope"></i> info@marinemonks.com</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 MarineMonks. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/navigation.js"></script>
+    <script>
+        const papersData = [
+            {
+                id: 'mekg-march-2025',
+                subject: 'MEK-G',
+                year: 2025,
+                topic: 'Pumps',
+                title: 'MEK-G March 2025 - Pumps & Pumping Systems',
+                date: 'Mar 10, 2025',
+                file: 'sample-pdfs/mekg_march_2025.pdf',
+                tags: ['Frequently Asked', 'Numerical'],
+                comingSoon: false
+            },
+            {
+                id: 'mekg-feb-2025',
+                subject: 'MEK-G',
+                year: 2025,
+                topic: 'Boilers',
+                title: 'MEK-G Feb 2025 - Boiler Operations & Maintenance',
+                date: 'Feb 05, 2025',
+                file: 'sample-pdfs/mekg_feb_2025.pdf',
+                tags: ['Sketch', 'Theory'],
+                comingSoon: false
+            },
+            {
+                id: 'mekm-jan-2025',
+                subject: 'MEK-M',
+                year: 2025,
+                topic: 'Main Engine',
+                title: 'MEK-M Jan 2025 - Main Engine Troubleshooting',
+                date: 'Jan 20, 2025',
+                file: 'sample-pdfs/mekm_jan_2025.pdf',
+                tags: ['Numerical', 'Case Study'],
+                comingSoon: false
+            },
+            {
+                id: 'met-dec-2024',
+                subject: 'MET',
+                year: 2024,
+                topic: 'Electrical Systems',
+                title: 'MET Dec 2024 - Ship Electrical Systems',
+                date: 'Dec 15, 2024',
+                file: 'sample-pdfs/met_dec_2024.pdf',
+                tags: ['Theory'],
+                comingSoon: false
+            },
+            {
+                id: 'mep-nov-2024',
+                subject: 'MEP',
+                year: 2024,
+                topic: 'Pollution Prevention',
+                title: 'MEP Nov 2024 - MARPOL Regulations',
+                date: 'Nov 01, 2024',
+                file: 'sample-pdfs/mep_nov_2024.pdf',
+                tags: ['Frequently Asked'],
+                comingSoon: false
+            },
+            {
+                id: 'naval-oct-2024',
+                subject: 'NAVAL',
+                year: 2024,
+                topic: 'Stability',
+                title: 'NAVAL Oct 2024 - Ship Stability Calculations',
+                date: 'Oct 20, 2024',
+                file: 'sample-pdfs/naval_oct_2024.pdf',
+                tags: ['Numerical'],
+                comingSoon: false
+            },
+            {
+                id: 'ssep-sept-2024',
+                subject: 'SSEP',
+                year: 2024,
+                topic: 'Fire Safety',
+                title: 'SSEP Sept 2024 - Fire Safety & Prevention',
+                date: 'Sep 10, 2024',
+                file: 'sample-pdfs/ssep_sept_2024.pdf',
+                tags: ['Sketch'],
+                comingSoon: false
+            },
+            {
+                id: 'mekg-aug-2024',
+                subject: 'MEK-G',
+                year: 2024,
+                topic: 'Auxiliary Machinery',
+                title: 'MEK-G Aug 2024 - Auxiliary Machinery Operations',
+                date: 'Aug 01, 2024',
+                file: 'sample-pdfs/mekg_aug_2024.pdf',
+                tags: ['Theory'],
+                comingSoon: false
+            },
+            {
+                id: 'mekm-july-2024',
+                subject: 'MEK-M',
+                year: 2024,
+                topic: 'Propulsion',
+                title: 'MEK-M July 2024 - Propulsion Systems',
+                date: 'Jul 15, 2024',
+                file: 'sample-pdfs/mekm_july_2024.pdf',
+                tags: ['Sketch'],
+                comingSoon: false
+            },
+            {
+                id: 'met-june-2024',
+                subject: 'MET',
+                year: 2024,
+                topic: 'Control Systems',
+                title: 'MET June 2024 - Automation & Control Systems',
+                date: 'Jun 01, 2024',
+                file: 'sample-pdfs/met_june_2024.pdf',
+                tags: ['Numerical'],
+                comingSoon: false
+            },
+            {
+                id: 'mep-may-2024',
+                subject: 'MEP',
+                year: 2024,
+                topic: 'Safety Management',
+                title: 'MEP May 2024 - ISM Code & Safety Management',
+                date: 'May 20, 2024',
+                file: 'sample-pdfs/mep_may_2024.pdf',
+                tags: ['Frequently Asked'],
+                comingSoon: false
+            },
+            {
+                id: 'naval-april-2024',
+                subject: 'NAVAL',
+                year: 2024,
+                topic: 'Ship Construction',
+                title: 'NAVAL April 2024 - Ship Construction & Design',
+                date: 'Apr 10, 2024',
+                file: 'sample-pdfs/naval_april_2024.pdf',
+                tags: ['Sketch'],
+                comingSoon: false
+            },
+            {
+                id: 'ssep-march-2024',
+                subject: 'SSEP',
+                year: 2024,
+                topic: 'Environmental Protection',
+                title: 'SSEP March 2024 - Environmental Regulations',
+                date: 'Mar 01, 2024',
+                file: 'sample-pdfs/ssep_march_2024.pdf',
+                tags: ['Theory'],
+                comingSoon: false
+            },
+            {
+                id: 'mekg-dec-2023',
+                subject: 'MEK-G',
+                year: 2023,
+                topic: 'Refrigeration',
+                title: 'MEK-G Dec 2023 - Refrigeration Systems',
+                date: 'Dec 10, 2023',
+                file: 'sample-pdfs/mekg_dec_2023.pdf',
+                tags: ['Numerical'],
+                comingSoon: false
+            },
+            {
+                id: 'mekm-nov-2023',
+                subject: 'MEK-M',
+                year: 2023,
+                topic: 'Auxiliary Engines',
+                title: 'MEK-M Nov 2023 - Auxiliary Engines & Systems',
+                date: 'Nov 05, 2023',
+                file: 'sample-pdfs/mekm_nov_2023.pdf',
+                tags: ['Sketch'],
+                comingSoon: false
+            },
+            {
+                id: 'met-oct-2023',
+                subject: 'MET',
+                year: 2023,
+                topic: 'Generators',
+                title: 'MET Oct 2023 - Marine Generators & Switchboards',
+                date: 'Oct 20, 2023',
+                file: 'sample-pdfs/met_oct_2023.pdf',
+                tags: ['Theory'],
+                comingSoon: false
+            },
+            {
+                id: 'mep-sept-2023',
+                subject: 'MEP',
+                year: 2023,
+                topic: 'ISM Code',
+                title: 'MEP Sept 2023 - ISM Code & Safety Management',
+                date: 'Sep 15, 2023',
+                file: 'sample-pdfs/mep_sept_2023.pdf',
+                tags: ['Frequently Asked'],
+                comingSoon: false
+            },
+            {
+                id: 'naval-aug-2023',
+                subject: 'NAVAL',
+                year: 2023,
+                topic: 'Hydrostatics',
+                title: 'NAVAL Aug 2023 - Hydrostatics & Trim',
+                date: 'Aug 01, 2023',
+                file: 'sample-pdfs/naval_aug_2023.pdf',
+                tags: ['Numerical'],
+                comingSoon: false
+            },
+            {
+                id: 'ssep-july-2023',
+                subject: 'SSEP',
+                year: 2023,
+                topic: 'MARPOL',
+                title: 'SSEP July 2023 - MARPOL Annexes & Compliance',
+                date: 'Jul 10, 2023',
+                file: 'sample-pdfs/ssep_july_2023.pdf',
+                tags: ['Theory'],
+                comingSoon: false
+            },
+            {
+                id: 'mekg-june-2023',
+                subject: 'MEK-G',
+                year: 2023,
+                topic: 'Pumps',
+                title: 'MEK-G June 2023 - Centrifugal Pumps',
+                date: 'Jun 01, 2023',
+                file: 'sample-pdfs/mekg_june_2023.pdf',
+                tags: ['Sketch'],
+                comingSoon: false
+            }
+        ];
+
+        let currentSubject = 'MEK-G'; // Default active subject
+
+        function renderPapers(data) {
+            const papersDisplayDiv = document.getElementById('papersDisplay');
+            papersDisplayDiv.innerHTML = '';
+
+            const filteredBySubject = data.filter(paper => paper.subject === currentSubject);
+
+            const searchTerm = document.getElementById('paperSearchInput').value.toLowerCase();
+            const selectedYear = document.getElementById('yearFilter').value;
+            const selectedTopic = document.getElementById('topicFilter').value;
+
+            const filteredAndSearched = filteredBySubject.filter(paper => {
+                const matchesSearch = paper.title.toLowerCase().includes(searchTerm) ||
+                                      paper.tags.some(tag => tag.toLowerCase().includes(searchTerm)) ||
+                                      paper.topic.toLowerCase().includes(searchTerm);
+                const matchesYear = selectedYear === 'all' || paper.year.toString() === selectedYear;
+                const matchesTopic = selectedTopic === 'all' || paper.topic === selectedTopic;
+                return matchesSearch && matchesYear && matchesTopic;
+            });
+
+            if (filteredAndSearched.length === 0) {
+                papersDisplayDiv.innerHTML = '<p style="text-align: center; margin-top: 50px; color: #6c757d;">No papers found for the selected filters.</p>';
+                return;
+            }
+
+            filteredAndSearched.forEach(paper => {
+                const paperItem = document.createElement('div');
+                paperItem.classList.add('paper-item');
+                paperItem.innerHTML = `
+                    <h4>${paper.title} ${paper.comingSoon ? '<span class="tag coming-soon-tag">Coming Soon</span>' : ''}</h4>
+                    <div class="paper-meta">
+                        <span><i class="fas fa-calendar-alt"></i> ${paper.date}</span>
+                        <span><i class="fas fa-book"></i> ${paper.subject}</span>
+                        <span><i class="fas fa-tag"></i> ${paper.topic}</span>
+                    </div>
+                    <div class="paper-tags">
+                        ${paper.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    </div>
+                    <div class="paper-actions">
+                        ${!paper.comingSoon ? `
+                            <button class="btn preview-btn" data-file="${paper.file}" data-title="${paper.title}">
+                                <i class="fas fa-eye"></i>
+                                Preview
+                            </button>
+                            <button class="btn download-btn" data-file="${paper.file}">
+                                <i class="fas fa-download"></i>
+                                Download
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+                papersDisplayDiv.appendChild(paperItem);
+            });
+
+            // Add event listeners for preview and download buttons
+            document.querySelectorAll('.preview-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const file = event.currentTarget.dataset.file;
+                    const title = event.currentTarget.dataset.title;
+                    openPdfPreview(file, title);
+                });
+            });
+
+            document.querySelectorAll('.download-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const file = event.currentTarget.dataset.file;
+                    downloadPdf(file);
+                });
+            });
+        }
+
+        function openPdfPreview(file, title) {
+            const modal = document.getElementById('pdfPreviewModal');
+            const iframe = document.getElementById('pdfViewerFrame');
+            const modalTitle = document.getElementById('pdfModalTitle');
+
+            modalTitle.textContent = `Preview: ${title}`;
+            iframe.src = file; // Assuming Flask serves PDFs from static folder
+            modal.style.display = 'flex';
+        }
+
+        function downloadPdf(file) {
+            const link = document.createElement('a');
+            link.href = file;
+            link.download = file.split('/').pop(); // Get filename from path
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Close modal functionality
+        document.querySelector('.pdf-modal-close').addEventListener('click', () => {
+            document.getElementById('pdfPreviewModal').style.display = 'none';
+            document.getElementById('pdfViewerFrame').src = ''; // Clear iframe src
+        });
+
+        // Close modal if clicked clicked outside
+        window.addEventListener('click', (event) => {
+            const modal = document.getElementById('pdfPreviewModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+                document.getElementById('pdfViewerFrame').src = '';
+            }
+        });
+
+        // Populate Year and Topic Filters
+        function populateFilters() {
+            const years = [...new Set(papersData.map(paper => paper.year))].sort((a, b) => b - a);
+            const topics = [...new Set(papersData.map(paper => paper.topic))].sort();
+
+            const yearFilter = document.getElementById('yearFilter');
+            years.forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                yearFilter.appendChild(option);
+            });
+
+            const topicFilter = document.getElementById('topicFilter');
+            topics.forEach(topic => {
+                const option = document.createElement('option');
+                option.value = topic;
+                option.textContent = topic;
+                topicFilter.appendChild(option);
+            });
+        }
+
+        // Event Listeners for Search and Filters
+        document.getElementById('paperSearchInput').addEventListener('keyup', () => renderPapers(papersData));
+        document.getElementById('yearFilter').addEventListener('change', () => renderPapers(papersData));
+        document.getElementById('topicFilter').addEventListener('change', () => renderPapers(papersData));
+
+        // Subject Tab functionality
+        document.querySelectorAll('.subject-tab-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                document.querySelectorAll('.subject-tab-btn').forEach(btn => btn.classList.remove('active'));
+                event.currentTarget.classList.add('active');
+                currentSubject = event.currentTarget.dataset.subject;
+                document.getElementById('yearFilter').value = 'all'; // Reset filters on subject change
+                document.getElementById('topicFilter').value = 'all';
+                document.getElementById('paperSearchInput').value = '';
+                renderPapers(papersData);
+            });
+        });
+
+        // Initial render
+        populateFilters();
+        renderPapers(papersData);
+    </script>
+</body>
+</html>
+

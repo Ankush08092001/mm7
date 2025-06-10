@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Detail - User Dashboard - MarineMonks</title>
+    <meta name="description" content="View details and progress for your MarineMonks course.">
+    <link rel="stylesheet" href="css/consolidated.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
+    <style>
+        /* User Dashboard Specific Styles */
+        .dashboard-container {
+            display: flex;
+            min-height: calc(100vh - 70px);
+        }
+        
+        /* Sidebar Styles */
+        .dashboard-sidebar {
+            width: 250px;
+            background-color: #1a2e69;
+            color: white;
+            padding: 20px 0;
+            transition: all 0.3s ease;
+        }
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-right: 15px;
+        }
+        .user-info {
+            flex: 1;
+        }
+        .user-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .user-plan {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            display: flex;
+            align-items: center;
+        }
+        .user-plan-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            background-color: var(--secondary-color);
+            border-radius: 20px;
+            font-size: 0.7rem;
+            margin-left: 5px;
+        }
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar-nav-item {
+            margin-bottom: 5px;
+        }
+        .sidebar-nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .sidebar-nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        .sidebar-nav-link.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-left: 4px solid var(--secondary-color);
+        }
+        .sidebar-icon {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            top: 80px;
+            left: 10px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Main Content Styles */
+        .dashboard-content {
+            flex: 1;
+            padding: 30px;
+            background-color: #f5f7fa;
+            overflow-y: auto;
+        }
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .dashboard-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+        .dashboard-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .dashboard-btn {
+            padding: 8px 15px;
+            border-radius: var(--border-radius);
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .dashboard-btn.primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .dashboard-btn.primary:hover {
+            background-color: #0056b3;
+        }
+        .dashboard-btn.secondary {
+            background-color: #f3f4f6;
+            color: #4b5563;
+        }
+        .dashboard-btn.secondary:hover {
+            background-color: #e5e7eb;
+        }
+        
+        /* Course Detail Styles */
+        .course-detail-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+        
+        /* Course Content Section */
+        .course-content {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--box-shadow);
+        }
+        .course-video-player {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border-radius: var(--border-radius);
+            background-color: #000;
+        }
+        .course-video-player iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .course-video-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #e5e7eb;
+            color: #6b7280;
+        }
+        .video-placeholder-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        .video-placeholder-text {
+            font-size: 1rem;
+        }
+        .course-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark-text);
+            margin-bottom: 10px;
+        }
+        .course-description {
+            font-size: 1rem;
+            color: #4b5563;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .course-tabs {
+            display: flex;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 20px;
+        }
+        .course-tab {
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+        }
+        .course-tab:hover {
+            color: var(--primary-color);
+        }
+        .course-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+        .course-tab-content {
+            display: none;
+        }
+        .course-tab-content.active {
+            display: block;
+        }
+        
+        /* Overview Tab */
+        .overview-content {
+            font-size: 0.95rem;
+            color: #4b5563;
+            line-height: 1.7;
+        }
+        .overview-content h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark-text);
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .overview-content ul {
+            list-style: disc;
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        /* Q&A Tab */
+        .qa-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .qa-item {
+            border-bottom: 1px solid #f3f4f6;
+            padding-bottom: 20px;
+        }
+        .qa-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        .qa-question {
+            font-weight: 600;
+            color: var(--dark-text);
+            margin-bottom: 10px;
+        }
+        .qa-answer {
+            color: #4b5563;
+            line-height: 1.6;
+        }
+        .qa-meta {
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin-top: 10px;
+        }
+        .qa-form {
+            margin-top: 30px;
+        }
+        .qa-form-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        .qa-textarea {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #d1d5db;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            min-height: 100px;
+            resize: vertical;
+            margin-bottom: 15px;
+        }
+        .qa-submit-btn {
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 500;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .qa-submit-btn:hover {
+            background-color: #0056b3;
+        }
+        
+        /* Notes Tab */
+        .notes-textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #d1d5db;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            min-height: 200px;
+            resize: vertical;
+            margin-bottom: 15px;
+        }
+        .notes-save-btn {
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 500;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .notes-save-btn:hover {
+            background-color: #0056b3;
+        }
+        
+        /* Course Sidebar Section */
+        .course-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .course-progress-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+        }
+        .progress-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark-text);
+            margin-bottom: 15px;
+        }
+        .progress-bar-container {
+            width: 100%;
+            height: 10px;
+            background-color: #e5e7eb;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: var(--secondary-color);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+        .progress-text {
+            font-size: 0.9rem;
+            color: #6b7280;
+            text-align: right;
+        }
+        .progress-actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        .progress-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+        }
+        .progress-btn.primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .progress-btn.primary:hover {
+            background-color: #0056b3;
+        }
+        .progress-btn.secondary {
+            background-color: #f3f4f6;
+            color: #4b5563;
+        }
+        .progress-btn.secondary:hover {
+            background-color: #e5e7eb;
+        }
+        .progress-btn-icon {
+            margin-right: 8px;
+        }
+        
+        /* Course Modules Card */
+        .course-modules-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+        }
+        .modules-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark-text);
+            margin-bottom: 15px;
+        }
+        .modules-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        .module-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            border: 1px solid #f3f4f6;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .module-item:hover {
+            background-color: #f9fafb;
+            border-color: #e5e7eb;
+        }
+        .module-item.active {
+            background-color: #f0f7ff;
+            border-color: var(--primary-color);
+        }
+        .module-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #e5e7eb;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        .module-item.completed .module-icon {
+            background-color: #e6f7ef;
+            color: #10b981;
+        }
+        .module-item.active .module-icon {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .module-info {
+            flex: 1;
+        }
+        .module-title {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--dark-text);
+            margin-bottom: 3px;
+        }
+        .module-duration {
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+        .module-status-icon {
+            font-size: 1rem;
+            color: #6b7280;
+        }
+        .module-item.completed .module-status-icon {
+            color: #10b981;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 1024px) {
+            .course-detail-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            .dashboard-sidebar {
+                position: fixed;
+                left: -250px;
+                top: 70px;
+                bottom: 0;
+                z-index: 100;
+                box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+            }
+            .dashboard-sidebar.active {
+                left: 0;
+            }
+            .dashboard-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            .sidebar-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip to content link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Header -->
+    <header role="banner">
+        <div class="container">
+            <nav class="navbar" role="navigation" aria-label="Main navigation">
+                <a href="../index.html" class="logo" aria-label="MarineMonks Home">
+                    <img src="../images/logo/logo-new.webp" alt="MarineMonks Logo" width="50" height="50" loading="lazy">
+                    <span class="logo-text">MarineMonks</span>
+                </a>
+                
+                <div class="mobile-menu-toggle" aria-expanded="false" aria-label="Toggle navigation menu" aria-controls="nav-links">
+                    <i class="fas fa-bars"></i>
+                </div>
+                
+                <ul class="nav-links" id="nav-links">
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="../study-material.html">Study Material</a></li>
+                    <li><a href="../mock-tests.html">Mock Tests</a></li>
+                    <li><a href="../papers.html">Papers</a></li>
+                    <li><a href="../probables.html">Probables</a></li>
+                </ul>
+                
+                <div class="auth-buttons">
+                    <a href="../login.html" class="btn btn-primary">Logout</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <div class="dashboard-container">
+            <!-- Sidebar Toggle Button (Mobile) -->
+            <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle Sidebar">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <!-- Dashboard Sidebar -->
+            <aside class="dashboard-sidebar" id="dashboard-sidebar">
+                <div class="sidebar-header">
+                    <div class="user-avatar">R</div>
+                    <div class="user-info">
+                        <div class="user-name">Rahul Sharma</div>
+                        <div class="user-plan">Pro Plan <span class="user-plan-badge">Active</span></div>
+                    </div>
+                </div>
+                
+                <ul class="sidebar-nav">
+                    <li class="sidebar-nav-item">
+                        <a href="user-dashboard.html" class="sidebar-nav-link">
+                            <i class="fas fa-tachometer-alt sidebar-icon"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="user-courses.html" class="sidebar-nav-link active">
+                            <i class="fas fa-book sidebar-icon"></i>
+                            My Courses
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="user-tests.html" class="sidebar-nav-link">
+                            <i class="fas fa-clipboard-list sidebar-icon"></i>
+                            My Tests
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="user-bookmarks.html" class="sidebar-nav-link">
+                            <i class="fas fa-bookmark sidebar-icon"></i>
+                            Bookmarks
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="user-certificates.html" class="sidebar-nav-link">
+                            <i class="fas fa-certificate sidebar-icon"></i>
+                            Certificates
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="user-subscription.html" class="sidebar-nav-link">
+                            <i class="fas fa-credit-card sidebar-icon"></i>
+                            Subscription
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="user-settings.html" class="sidebar-nav-link">
+                            <i class="fas fa-cog sidebar-icon"></i>
+                            Settings
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item">
+                        <a href="user-support.html" class="sidebar-nav-link">
+                            <i class="fas fa-headset sidebar-icon"></i>
+                            Support
+                        </a>
+                    </li>
+                </ul>
+            </aside>
+            
+            <!-- Main Content -->
+            <div class="dashboard-content">
+                <div class="dashboard-header">
+                    <h1 class="dashboard-title">Marine Diesel Engines: Comprehensive Guide</h1>
+                    <div class="dashboard-actions">
+                        <a href="#" class="dashboard-btn secondary">
+                            <i class="fas fa-bookmark"></i> Bookmark
+                        </a>
+                        <a href="user-courses.html" class="dashboard-btn primary">
+                            <i class="fas fa-arrow-left"></i> Back to Courses
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Course Detail Container -->
+                <div class="course-detail-container">
+                    <!-- Course Content Section -->
+                    <div class="course-content">
+                        <!-- Video Player -->
+                        <div class="course-video-player">
+                            <!-- Placeholder - Replace with actual video embed -->
+                            <div class="course-video-placeholder">
+                                <i class="fas fa-play-circle video-placeholder-icon"></i>
+                                <span class="video-placeholder-text">Video player will load here</span>
+                            </div>
+                            <!-- Example YouTube Embed -->
+                            <!-- <iframe src="https://www.youtube.com/embed/VIDEO_ID" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+                        </div>
+                        
+                        <h2 class="course-title">Module 1: Introduction to Marine Diesel Engines</h2>
+                        <p class="course-description">
+                            This module provides a foundational understanding of marine diesel engines, their types, operating principles, and key components. We will explore the history and evolution of these powerful machines and their critical role in the maritime industry.
+                        </p>
+                        
+                        <!-- Tabs -->
+                        <div class="course-tabs">
+                            <div class="course-tab active" data-tab="overview">Overview</div>
+                            <div class="course-tab" data-tab="qa">Q&A</div>
+                            <div class="course-tab" data-tab="notes">My Notes</div>
+                            <div class="course-tab" data-tab="resources">Resources</div>
+                        </div>
+                        
+                        <!-- Tab Content -->
+                        <div class="course-tab-content active" id="overview">
+                            <div class="overview-content">
+                                <h3>Learning Objectives</h3>
+                                <ul>
+                                    <li>Understand the basic principles of diesel engine operation.</li>
+                                    <li>Identify the main components of a marine diesel engine.</li>
+                                    <li>Differentiate between 2-stroke and 4-stroke engines.</li>
+                                    <li>Recognize the importance of diesel engines in maritime transport.</li>
+                                    <li>Learn about key terminology related to engine performance.</li>
+                                </ul>
+                                
+                                <h3>Module Outline</h3>
+                                <p>This module covers the following topics:</p>
+                                <ul>
+                                    <li>1.1: History and Development</li>
+                                    <li>1.2: The Diesel Cycle Explained</li>
+                                    <li>1.3: Engine Components and Their Functions</li>
+                                    <li>1.4: Types of Marine Diesel Engines (Slow, Medium, High Speed)</li>
+                                    <li>1.5: Comparison: 2-Stroke vs. 4-Stroke Engines</li>
+                                    <li>1.6: Basic Engine Parameters (Power, Torque, Efficiency)</li>
+                                </ul>
+                                
+                                <h3>Instructor Notes</h3>
+                                <p>Welcome to the first module! Pay close attention to the fundamental concepts as they form the basis for understanding more complex topics later in the course. Don't hesitate to use the Q&A section if you have any doubts.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="course-tab-content" id="qa">
+                            <div class="qa-list">
+                                <!-- Q&A Item 1 -->
+                                <div class="qa-item">
+                                    <p class="qa-question">What is the main difference between the Otto cycle and the Diesel cycle?</p>
+                                    <p class="qa-answer">The main difference lies in the ignition method. In the Otto cycle (used in gasoline engines), ignition is caused by a spark plug. In the Diesel cycle, ignition occurs due to the high temperature generated by compressing the air in the cylinder (compression ignition).</p>
+                                    <p class="qa-meta">Asked by Priya Singh | Answered by Capt. James Davis | 2 days ago</p>
+                                </div>
+                                <!-- Q&A Item 2 -->
+                                <div class="qa-item">
+                                    <p class="qa-question">Why are 2-stroke engines commonly used for large container ships?</p>
+                                    <p class="qa-answer">Large, slow-speed 2-stroke engines are preferred for large vessels due to their high thermal efficiency, ability to burn cheaper heavy fuel oil (HFO), simpler construction (fewer moving parts like valves), and high power output at low rotational speeds, which is ideal for direct propeller drive.</p>
+                                    <p class="qa-meta">Asked by Arjun Kumar | Answered by Capt. James Davis | 1 day ago</p>
+                                </div>
+                            </div>
+                            
+                            <div class="qa-form">
+                                <h3 class="qa-form-title">Ask a Question</h3>
+                                <textarea class="qa-textarea" placeholder="Type your question here..."></textarea>
+                                <button class="qa-submit-btn">Submit Question</button>
+                            </div>
+                        </div>
+                        
+                        <div class="course-tab-content" id="notes">
+                            <textarea class="notes-textarea" placeholder="Take your personal notes for this module here..."></textarea>
+                            <button class="notes-save-btn">Save Notes</button>
+                        </div>
+                        
+                        <div class="course-tab-content" id="resources">
+                            <div class="overview-content">
+                                <h3>Downloadable Resources</h3>
+                                <ul>
+                                    <li><a href="#" download>Module 1 Slides (PDF)</a></li>
+                                    <li><a href="#" download>Engine Components Diagram (JPG)</a></li>
+                                    <li><a href="#" download>Glossary of Terms (DOCX)</a></li>
+                                </ul>
+                                
+                                <h3>External Links</h3>
+                                <ul>
+                                    <li><a href="#" target="_blank">MAN Energy Solutions - 2-Stroke Engines</a></li>
+                                    <li><a href="#" target="_blank">Wärtsilä Encyclopedia of Marine Technology</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Course Sidebar Section -->
+                    <div class="course-sidebar">
+                        <!-- Course Progress Card -->
+                        <div class="course-progress-card">
+                            <h3 class="progress-title">Your Progress</h3>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" style="width: 65%;"></div>
+                            </div>
+                            <p class="progress-text">65% Complete (8 / 12 Modules)</p>
+                            <div class="progress-actions">
+                                <button class="progress-btn secondary">
+                                    <i class="fas fa-flag progress-btn-icon"></i> Mark as Complete
+                                </button>
+                                <button class="progress-btn primary">
+                                    <i class="fas fa-arrow-right progress-btn-icon"></i> Next Module
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Course Modules Card -->
+                        <div class="course-modules-card">
+                            <h3 class="modules-title">Course Modules</h3>
+                            <div class="modules-list">
+                                <!-- Module Item 1 -->
+                                <div class="module-item active">
+                                    <div class="module-icon">
+                                        <i class="fas fa-play"></i>
+                                    </div>
+                                    <div class="module-info">
+                                        <div class="module-title">1. Introduction to Marine Diesel Engines</div>
+                                        <div class="module-duration">45 mins</div>
+                                    </div>
+                                    <i class="fas fa-chevron-right module-status-icon"></i>
+                                </div>
+                                <!-- Module Item 2 -->
+                                <div class="module-item completed">
+                                    <div class="module-icon">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <div class="module-info">
+                                        <div class="module-title">2. Fuel Systems</div>
+                                        <div class="module-duration">1 hr 15 mins</div>
+                                    </div>
+                                    <i class="fas fa-check-circle module-status-icon"></i>
+                                </div>
+                                <!-- Module Item 3 -->
+                                <div class="module-item completed">
+                                    <div class="module-icon">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <div class="module-info">
+                                        <div class="module-title">3. Lubrication Systems</div>
+                                        <div class="module-duration">1 hr</div>
+                                    </div>
+                                    <i class="fas fa-check-circle module-status-icon"></i>
+                                </div>
+                                <!-- Module Item 4 -->
+                                <div class="module-item completed">
+                                    <div class="module-icon">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <div class="module-info">
+                                        <div class="module-title">4. Cooling Systems</div>
+                                        <div class="module-duration">50 mins</div>
+                                    </div>
+                                    <i class="fas fa-check-circle module-status-icon"></i>
+                                </div>
+                                <!-- Module Item 5 -->
+                                <div class="module-item completed">
+                                    <div class="module-icon">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <div class="module-info">
+                                        <div class="module-title">5. Air Intake & Exhaust Systems</div>
+                                        <div class="module-duration">1 hr 10 mins</div>
+                                    </div>
+                                    <i class="fas fa-check-circle module-status-icon"></i>
+                                </div>
+                                <!-- Module Item 6 -->
+                                <div class="module-item completed">
+                                    <div class="module-icon">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <div class="module-info">
+                                        <div class="module-title">6. Engine Control & Monitoring</div>
+                                        <div class="module-duration">1 hr 30 mins</div>
+                                    </div>
+                                    <i class="fas fa-check-circle module-status-icon"></i>
+                                </div>
+                                <!-- Module Item 7 -->
+                                <div class="module-item completed">
+                                    <div class="module-icon">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <div class="module-info">
+                                        <div class="module-title">7. Engine Performance & Testing</div>
+                                        <div class="module-duration">1 hr 20 mins</div>
+                                    </div>
+                                    <i class="fas fa-check-circle module-status-icon"></i>
+                                </div>
+                                <!-- Module Item 8 -->
+                                <div class="module-item completed">
+                                    <div class="module-icon">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <div class="module-info">
+                                        <div class="module-title">8. Maintenance & Troubleshooting</div>
+                                        <div class="module-duration">2 hrs</div>
+                                    </div>
+                                    <i class="fas fa-check-circle module-status-icon"></i>
+                                </div>
+                                <!-- Module Item 9 -->
+                                <div class="module-item">
+                                    <div class="module-icon">9</div>
+                                    <div class="module-info">
+                                        <div class="module-title">9. Emission Control & Regulations</div>
+                                        <div class="module-duration">1 hr</div>
+                                    </div>
+                                    <i class="fas fa-chevron-right module-status-icon"></i>
+                                </div>
+                                <!-- Module Item 10 -->
+                                <div class="module-item">
+                                    <div class="module-icon">10</div>
+                                    <div class="module-info">
+                                        <div class="module-title">10. Alternative Fuels & Future Trends</div>
+                                        <div class="module-duration">45 mins</div>
+                                    </div>
+                                    <i class="fas fa-chevron-right module-status-icon"></i>
+                                </div>
+                                <!-- Module Item 11 -->
+                                <div class="module-item">
+                                    <div class="module-icon">11</div>
+                                    <div class="module-info">
+                                        <div class="module-title">11. Safety Procedures</div>
+                                        <div class="module-duration">30 mins</div>
+                                    </div>
+                                    <i class="fas fa-chevron-right module-status-icon"></i>
+                                </div>
+                                <!-- Module Item 12 -->
+                                <div class="module-item">
+                                    <div class="module-icon">12</div>
+                                    <div class="module-info">
+                                        <div class="module-title">12. Final Assessment</div>
+                                        <div class="module-duration">1 hr</div>
+                                    </div>
+                                    <i class="fas fa-chevron-right module-status-icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="../images/logo/logo-new.webp" alt="MarineMonks Logo" width="50" height="50" loading="lazy">
+                    <span>MarineMonks</span>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="footer-links-column">
+                        <h3>Quick Links</h3>
+                        <ul>
+                            <li><a href="../index.html">Home</a></li>
+                            <li><a href="../study-material.html">Study Material</a></li>
+                            <li><a href="../mock-tests.html">Mock Tests</a></li>
+                            <li><a href="../papers.html">Papers</a></li>
+                            <li><a href="../probables.html">Probables</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-links-column">
+                        <h3>Support</h3>
+                        <ul>
+                            <li><a href="#">Contact Us</a></li>
+                            <li><a href="#">FAQ</a></li>
+                            <li><a href="../terms-of-service.html">Terms of Service</a></li>
+                            <li><a href="../privacy-policy.html">Privacy Policy</a></li>
+                            <li><a href="../refund-policy.html">Refund Policy</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-links-column">
+                        <h3>Connect With Us</h3>
+                        <div class="social-links">
+                            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 MarineMonks. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Sidebar toggle functionality for mobile
+        document.addEventListener("DOMContentLoaded", function() {
+            const sidebarToggle = document.getElementById("sidebar-toggle");
+            const sidebar = document.getElementById("dashboard-sidebar");
+            
+            if (sidebarToggle && sidebar) {
+                sidebarToggle.addEventListener("click", function() {
+                    sidebar.classList.toggle("active");
+                });
+            }
+            
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener("click", function(event) {
+                if (window.innerWidth <= 768 && 
+                    !event.target.closest("#dashboard-sidebar") && 
+                    !event.target.closest("#sidebar-toggle") &&
+                    sidebar.classList.contains("active")) {
+                    sidebar.classList.remove("active");
+                }
+            });
+            
+            // Course Tabs functionality
+            const tabs = document.querySelectorAll(".course-tab");
+            const tabContents = document.querySelectorAll(".course-tab-content");
+            
+            tabs.forEach(tab => {
+                tab.addEventListener("click", function() {
+                    const targetTab = this.getAttribute("data-tab");
+                    
+                    // Deactivate all tabs and content
+                    tabs.forEach(t => t.classList.remove("active"));
+                    tabContents.forEach(c => c.classList.remove("active"));
+                    
+                    // Activate clicked tab and corresponding content
+                    this.classList.add("active");
+                    document.getElementById(targetTab).classList.add("active");
+                });
+            });
+            
+            // Module selection functionality
+            const moduleItems = document.querySelectorAll(".module-item");
+            
+            moduleItems.forEach(item => {
+                item.addEventListener("click", function() {
+                    // Remove active state from all modules
+                    moduleItems.forEach(i => i.classList.remove("active"));
+                    
+                    // Add active state to clicked module
+                    this.classList.add("active");
+                    
+                    // In a real implementation, this would load the module content
+                    const moduleTitle = this.querySelector(".module-title").textContent;
+                    alert(`Loading content for: ${moduleTitle}`);
+                    
+                    // Update main course title (example)
+                    const mainCourseTitle = document.querySelector(".dashboard-title");
+                    if (mainCourseTitle) {
+                        mainCourseTitle.textContent = moduleTitle;
+                    }
+                });
+            });
+            
+            // Progress buttons functionality
+            const markCompleteBtn = document.querySelector(".progress-btn.secondary");
+            const nextModuleBtn = document.querySelector(".progress-btn.primary");
+            
+            if (markCompleteBtn) {
+                markCompleteBtn.addEventListener("click", function() {
+                    // In a real implementation, this would mark the current module as complete
+                    alert("Marking current module as complete...");
+                });
+            }
+            
+            if (nextModuleBtn) {
+                nextModuleBtn.addEventListener("click", function() {
+                    // In a real implementation, this would navigate to the next module
+                    alert("Navigating to the next module...");
+                });
+            }
+            
+            // Q&A form submission
+            const qaForm = document.querySelector(".qa-form");
+            if (qaForm) {
+                qaForm.addEventListener("submit", function(e) {
+                    e.preventDefault();
+                    const questionText = this.querySelector(".qa-textarea").value;
+                    if (questionText.trim()) {
+                        // In a real implementation, submit the question
+                        alert(`Question submitted: ${questionText}`);
+                        this.reset();
+                    } else {
+                        alert("Please enter your question before submitting.");
+                    }
+                });
+            }
+            
+            // Notes save functionality
+            const saveNotesBtn = document.querySelector(".notes-save-btn");
+            if (saveNotesBtn) {
+                saveNotesBtn.addEventListener("click", function() {
+                    const notesText = document.querySelector(".notes-textarea").value;
+                    // In a real implementation, save the notes
+                    alert(`Notes saved: ${notesText}`);
+                });
+            }
+            
+            // Bookmark button functionality
+            const bookmarkBtn = document.querySelector(".dashboard-btn.secondary");
+            if (bookmarkBtn && bookmarkBtn.textContent.includes("Bookmark")) {
+                bookmarkBtn.addEventListener("click", function(e) {
+                    e.preventDefault();
+                    // In a real implementation, toggle bookmark status
+                    alert("Toggling bookmark status for this course...");
+                    this.innerHTML = this.innerHTML.includes("Bookmark") 
+                        ? 
+                        : 
+                });
+            }
+        });
+    </script>
+</body>
+</html>

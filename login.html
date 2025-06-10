@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - MarineMonks</title>
+    <meta name="description" content="Log in to your MarineMonks account to access study materials, mock tests, and track your MEO Class 4 exam preparation progress.">
+    <link rel="stylesheet" href="css/consolidated.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="canonical" href="https://www.marinemonks.in/login.html">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <style>
+        .login-container {
+            max-width: 450px;
+            margin: 60px auto;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 40px;
+        }
+        .login-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .login-title h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark-text);
+            margin-bottom: 10px;
+        }
+        .login-title p {
+            color: #666;
+        }
+        .login-title p a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .login-title p a:hover {
+            text-decoration: underline;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark-text);
+        }
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(0, 184, 148, 0.1);
+        }
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .remember-me {
+            display: flex;
+            align-items: center;
+        }
+        .remember-me input {
+            margin-right: 8px;
+        }
+        .forgot-password {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .login-btn:hover {
+            background-color: #00a382;
+        }
+        .social-divider {
+            text-align: center;
+            margin: 25px 0;
+            position: relative;
+        }
+        .social-divider::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: #ddd;
+        }
+        .social-divider span {
+            position: relative;
+            background-color: white;
+            padding: 0 15px;
+            color: #777;
+            font-size: 0.9rem;
+        }
+        .social-login {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .social-btn {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .social-btn:hover {
+            background-color: #f5f5f5;
+        }
+        .social-btn i {
+            font-size: 1.2rem;
+            color: #555;
+        }
+    </style>
+<script src="js/navigation.js" defer></script>
+</head>
+<body>
+    <!-- Skip to content link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Header -->
+    <header role="banner">
+        <div class="container">
+            <nav class="navbar" role="navigation" aria-label="Main navigation">
+                <a href="index.html" class="logo" aria-label="MarineMonks Home">
+                    <img src="images/logo/logo-new.webp" alt="MarineMonks Logo" width="50" height="50" loading="lazy">
+                    <span class="logo-text">MarineMonks</span>
+                </a>
+                
+                <div class="mobile-menu-toggle" aria-expanded="false" aria-label="Toggle navigation menu" aria-controls="nav-links">
+                    <i class="fas fa-bars"></i>
+                </div>
+                
+                <ul class="nav-links" id="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="study-material.html">Study Material</a></li>
+                    <li><a href="mock-tests.html">Mock Tests</a></li>
+                    <li><a href="papers.html">Papers</a></li>
+                    <li><a href="probables.html">Probables</a></li>
+                </ul>
+                
+                <div class="auth-buttons">
+                    <a href="login.html" class="btn btn-outline active">Login</a>
+                    <a href="signup.html" class="btn btn-primary">Sign Up</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+    <!-- Login Section -->
+    <section class="login-section" id="main-content">
+        <div class="container">
+            <div class="login-container">
+                <div class="login-title">
+                    <h1>Log in to your account</h1>
+                    <p>Or <a href="signup.html">create a new account</a></p>
+                </div>
+                
+                <form action="#" method="POST" id="login-form">
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email address</label>
+                        <input type="email" id="email" name="email" class="form-input" placeholder="you@example.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" id="password" name="password" class="form-input" placeholder="••••••••" required>
+                    </div>
+                    
+                    <div class="form-footer">
+                        <div class="remember-me">
+                            <input type="checkbox" id="remember_me" name="remember_me">
+                            <label for="remember_me">Remember me</label>
+                        </div>
+                        
+                        <a href="javascript:void(0);" class="forgot-password">Forgot your password?</a>
+                    </div>
+                    
+                    <button type="submit" class="login-btn">Log in</button>
+                </form>
+                
+                <div class="social-divider">
+                    <span>Or continue with</span>
+                </div>
+                
+                <div class="social-login">
+                    <button class="social-btn" aria-label="Continue with Google">
+                        <i class="fab fa-google" aria-hidden="true"></i>
+                    </button>
+                    <button class="social-btn" aria-label="Continue with Facebook">
+                        <i class="fab fa-facebook-f" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <a href="index.html" class="footer-logo">
+                        <img src="images/logo/logo-new.webp" alt="MarineMonks Logo" width="40" height="40" loading="lazy">
+                        <span>MarineMonks</span>
+                    </a>
+                    <p>India's premier marine engineering educational platform for MEO Class 4 exam preparation.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="study-material.html">Study Material</a></li>
+                        <li><a href="mock-tests.html">Mock Tests</a></li>
+                        <li><a href="papers.html">Papers</a></li>
+                        <li><a href="probables.html">Probables</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Refund Policy</a></li>
+                        
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Contact Us</h4>
+                    <ul class="contact-info">
+                        <li><i class="fas fa-envelope"></i> support@marinemonks.com</li>
+                        <li><i class="fas fa-phone"></i> +91 98765 43210</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Mumbai, Maharashtra, India</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 MarineMonks. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/optimized.js"></script>
+    <script>
+        // Add active class to current page in navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = window.location.pathname.split('/').pop();
+            const navLinks = document.querySelectorAll('.nav-links a');
+            
+            navLinks.forEach(link => {
+                const linkHref = link.getAttribute('href');
+                if (linkHref === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+
+            // Form validation
+            const loginForm = document.getElementById('login-form');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const email = document.getElementById('email').value;
+                    const password = document.getElementById('password').value;
+                    
+                    // Simple validation
+                    if (email && password) {
+                        // In a real application, this would send data to the server
+                        console.log('Login attempt:', { email });
+                        alert('Login successful! Redirecting to dashboard...');
+                        window.location.href = 'user-dashboard.html';
+                    } else {
+                        alert('Please fill in all fields');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

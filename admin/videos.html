@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Videos Management - MarineMonks</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        /* Dashboard specific styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: #1e293b;
+            color: #f9fafb;
+            position: fixed;
+            height: 100%;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #2d3748;
+        }
+        
+        .sidebar-header .logo {
+            width: 35px;
+            height: 35px;
+            background-color: #3b82f6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+        }
+        
+        .sidebar-header h1 {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .menu-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            color: #cbd5e1;
+            text-decoration: none;
+            position: relative;
+            transition: all 0.2s;
+        }
+        
+        .menu-item:hover {
+            background-color: #2d3748;
+            color: #f9fafb;
+        }
+        
+        .menu-item.active {
+            background-color: #3b82f6;
+            color: #f9fafb;
+        }
+        
+        .menu-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .menu-item .badge {
+            position: absolute;
+            top: 12px;
+            right: 20px;
+            background-color: #ef4444;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 20px;
+        }
+        
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 20px;
+        }
+        
+        .page-title {
+            display: flex;
+            align-items: center;
+        }
+        
+        .page-title h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .page-title .badge {
+            background-color: #ef4444;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 10px;
+        }
+        
+        .user-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .notification-bell {
+            position: relative;
+            margin-right: 20px;
+            cursor: pointer;
+            color: #6b7280;
+        }
+        
+        .notification-bell .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #ef4444;
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .user-profile-icon {
+            width: 35px;
+            height: 35px;
+            background-color: #3b82f6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        /* Videos specific styles */
+        .videos-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .videos-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .add-video-btn {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 15px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s;
+        }
+        
+        .add-video-btn:hover {
+            background-color: #2563eb;
+        }
+        
+        .add-video-btn i {
+            margin-right: 5px;
+        }
+        
+        .videos-filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .search-box {
+            flex-grow: 1;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 8px 15px 8px 35px;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+        
+        .filter-select {
+            padding: 8px 15px;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            font-size: 14px;
+            background-color: white;
+        }
+        
+        .filter-btn {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            padding: 8px 15px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s;
+        }
+        
+        .filter-btn:hover {
+            background-color: #f3f4f6;
+        }
+        
+        .filter-btn i {
+            margin-right: 5px;
+        }
+        
+        .videos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .video-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+        }
+        
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .video-thumbnail {
+            height: 180px;
+            background-color: #f3f4f6;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .video-duration {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            font-size: 12px;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        
+        .video-play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .video-thumbnail:hover .video-play-btn {
+            opacity: 1;
+        }
+        
+        .video-details {
+            padding: 15px;
+        }
+        
+        .video-title {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 5px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 42px;
+        }
+        
+        .video-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        .video-category {
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 500;
+            background-color: #f3f4f6;
+            color: #6b7280;
+            display: inline-block;
+        }
+        
+        .video-category.navigation {
+            background-color: #dbeafe;
+            color: #3b82f6;
+        }
+        
+        .video-category.engineering {
+            background-color: #fee2e2;
+            color: #dc2626;
+        }
+        
+        .video-category.safety {
+            background-color: #d1fae5;
+            color: #10b981;
+        }
+        
+        .video-category.regulations {
+            background-color: #ffedd5;
+            color: #f59e0b;
+        }
+        
+        .video-category.meteorology {
+            background-color: #ede9fe;
+            color: #8b5cf6;
+        }
+        
+        .video-access {
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 500;
+            background-color: #f3f4f6;
+            color: #6b7280;
+            display: inline-block;
+        }
+        
+        .video-access.free {
+            background-color: #d1fae5;
+            color: #10b981;
+        }
+        
+        .video-access.basic {
+            background-color: #dbeafe;
+            color: #3b82f6;
+        }
+        
+        .video-access.premium {
+            background-color: #ede9fe;
+            color: #8b5cf6;
+        }
+        
+        .video-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        .video-stat {
+            display: flex;
+            align-items: center;
+        }
+        
+        .video-stat i {
+            margin-right: 5px;
+        }
+        
+        .video-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        
+        .action-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .action-btn.view {
+            background-color: #8b5cf6;
+        }
+        
+        .action-btn.view:hover {
+            background-color: #7c3aed;
+        }
+        
+        .action-btn.edit {
+            background-color: #10b981;
+        }
+        
+        .action-btn.edit:hover {
+            background-color: #059669;
+        }
+        
+        .action-btn.delete {
+            background-color: #ef4444;
+        }
+        
+        .action-btn.delete:hover {
+            background-color: #dc2626;
+        }
+        
+        .action-btn.analytics {
+            background-color: #f59e0b;
+        }
+        
+        .action-btn.analytics:hover {
+            background-color: #d97706;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .pagination-info {
+            margin-top: 20px;
+            text-align: center;
+            color: #6b7280;
+            font-size: 14px;
+        }
+        
+        .pagination-btn {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e5e7eb;
+            background-color: white;
+            color: #4b5563;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .pagination-btn:first-child {
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
+        }
+        
+        .pagination-btn:last-child {
+            border-top-right-radius: 4px;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .pagination-btn.active {
+            background-color: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+        
+        .pagination-btn:hover:not(.active) {
+            background-color: #f9fafb;
+        }
+        
+        @media (max-width: 1024px) {
+            .videos-filters {
+                flex-wrap: wrap;
+            }
+            
+            .search-box {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .videos-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+            
+            .sidebar-header h1 {
+                display: none;
+            }
+            
+            .menu-item span {
+                display: none;
+            }
+            
+            .menu-item i {
+                margin-right: 0;
+            }
+            
+            .main-content {
+                margin-left: 70px;
+            }
+            
+            .videos-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-anchor"></i>
+                </div>
+                <h1>MarineMonks</h1>
+            </div>
+            <div class="sidebar-menu">
+                <a href="index.html" class="menu-item">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="users-management.html" class="menu-item">
+                    <i class="fas fa-users"></i>
+                    <span>Users</span>
+                </a>
+                <a href="study-materials.html" class="menu-item">
+                    <i class="fas fa-book"></i>
+                    <span>Study Materials</span>
+                </a>
+                <a href="mock-tests-management.html" class="menu-item">
+                    <i class="fas fa-clipboard-check"></i>
+                    <span>Mock Tests</span>
+                </a>
+                <a href="videos.html" class="menu-item active">
+                    <i class="fas fa-video"></i>
+                    <span>Videos</span>
+                </a>
+                <a href="papers.html" class="menu-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Papers</span>
+                </a>
+                <a href="subscriptions.html" class="menu-item">
+                    <i class="fas fa-credit-card"></i>
+                    <span>Subscriptions</span>
+                </a>
+                <a href="analytics.html" class="menu-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Analytics</span>
+                </a>
+                <a href="settings.html" class="menu-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="top-bar">
+                <div class="page-title">
+                    <h1>Videos Management</h1>
+                </div>
+                <div class="user-actions">
+                    <div class="notification-bell">
+                        <i class="fas fa-bell fa-lg"></i>
+                    </div>
+                    <div class="user-profile-icon">
+                        AU
+                    </div>
+                    <span style="margin-left: 10px;">Admin User</span>
+                </div>
+            </div>
+            <div class="videos-header">
+                <div class="videos-title">All Videos</div>
+                <button class="add-video-btn quick-action-add-video">
+                    <i class="fas fa-plus"></i>
+                    Add Video
+                </button>
+            </div>
+            <div class="videos-filters">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search videos...">
+                </div>
+                <select class="filter-select">
+                    <option value="">All Categories</option>
+                    <option value="navigation">Navigation</option>
+                    <option value="engineering">Engineering</option>
+                    <option value="safety">Safety</option>
+                    <option value="regulations">Regulations</option>
+                    <option value="meteorology">Meteorology</option>
+                </select>
+                <select class="filter-select">
+                    <option value="">All Access Levels</option>
+                    <option value="free">Free</option>
+                    <option value="basic">Basic</option>
+                    <option value="premium">Premium</option>
+                </select>
+                <button class="filter-btn">
+                    <i class="fas fa-filter"></i>
+                    Filter
+                </button>
+            </div>
+            <div class="videos-grid">
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="https://via.placeholder.com/300x180.png?text=Centrifugal+Pump+Operation" alt="Centrifugal Pump Operation">
+                        <div class="video-duration">12:45</div>
+                        <div class="video-play-btn">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-details">
+                        <div class="video-title">Centrifugal Pump Operation and Maintenance</div>
+                        <div class="video-meta">
+                            <span>Jun 3, 2025</span>
+                            <span>Admin User</span>
+                        </div>
+                        <div>
+                            <span class="video-category engineering">Engineering</span>
+                            <span class="video-access basic">Basic</span>
+                        </div>
+                        <div class="video-stats">
+                            <div class="video-stat">
+                                <i class="fas fa-eye"></i>
+                                <span>245</span>
+                            </div>
+                            <div class="video-stat">
+                                <i class="fas fa-thumbs-up"></i>
+                                <span>32</span>
+                            </div>
+                            <div class="video-stat">
+                                <i class="fas fa-comment"></i>
+                                <span>8</span>
+                            </div>
+                        </div>
+                        <div class="video-actions">
+                            <div class="action-btn view"><i class="fas fa-eye"></i></div>
+                            <div class="action-btn edit"><i class="fas fa-edit"></i></div>
+                            <div class="action-btn delete"><i class="fas fa-trash"></i></div>
+                            <div class="action-btn analytics"><i class="fas fa-chart-bar"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="https://via.placeholder.com/300x180.png?text=Celestial+Navigation" alt="Celestial Navigation">
+                        <div class="video-duration">18:23</div>
+                        <div class="video-play-btn">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-details">
+                        <div class="video-title">Celestial Navigation: Principles and Practice</div>
+                        <div class="video-meta">
+                            <span>May 28, 2025</span>
+                            <span>Admin User</span>
+                        </div>
+                        <div>
+                            <span class="video-category navigation">Navigation</span>
+                            <span class="video-access free">Free</span>
+                        </div>
+                        <div class="video-stats">
+                            <div class="video-stat">
+                                <i class="fas fa-eye"></i>
+                                <span>312</span>
+                            </div>
+                            <div class="video-stat">
+                                <i class="fas fa-thumbs-up"></i>
+                                <span>45</span>
+                            </div>
+                            <div class="video-stat">
+                                <i class="fas fa-comment"></i>
+                                <span>12</span>
+                            </div>
+                        </div>
+                        <div class="video-actions">
+                            <div class="action-btn view"><i class="fas fa-eye"></i></div>
+                            <div class="action-btn edit"><i class="fas fa-edit"></i></div>
+                            <div class="action-btn delete"><i class="fas fa-trash"></i></div>
+                            <div class="action-btn analytics"><i class="fas fa-chart-bar"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="https://via.placeholder.com/300x180.png?text=MARPOL+Regulations" alt="MARPOL Regulations">
+                        <div class="video-duration">15:10</div>
+                        <div class="video-play-btn">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-details">
+                        <div class="video-title">Understanding MARPOL Regulations: A Comprehensive Guide</div>
+                        <div class="video-meta">
+                            <span>May 20, 2025</span>
+                            <span>Admin User</span>
+                        </div>
+                        <div>
+                            <span class="video-category regulations">Regulations</span>
+                            <span class="video-access premium">Premium</span>
+                        </div>
+                        <div class="video-stats">
+                            <div class="video-stat">
+                                <i class="fas fa-eye"></i>
+                                <span>178</span>
+                            </div>
+                            <div class="video-stat">
+                                <i class="fas fa-thumbs-up"></i>
+                                <span>27</span>
+                            </div>
+                            <div class="video-stat">
+                                <i class="fas fa-comment"></i>
+                                <span>5</span>
+                            </div>
+                        </div>
+                        <div class="video-actions">
+                            <div class="action-btn view"><i class="fas fa-eye"></i></div>
+                            <div class="action-btn edit"><i class="fas fa-edit"></i></div>
+                            <div class="action-btn delete"><i class="fas fa-trash"></i></div>
+                            <div class="action-btn analytics"><i class="fas fa-chart-bar"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="https://via.placeholder.com/300x180.png?text=Safety+Procedures" alt="Safety Procedures">
+                        <div class="video-duration">20:35</div>
+                        <div class="video-play-btn">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-details">
+                        <div class="video-title">Safety Procedures for Hazardous Materials Handling</div>
+                        <div class="video-meta">
+                            <span>May 15, 2025</span>
+                            <span>Admin User</span>
+                        </div>
+                        <div>
+                            <span class="video-category safety">Safety</span>
+                            <span class="video-access basic">Basic</span>
+                        </div>
+                        <div class="video-stats">
+                            <div class="video-stat">
+                                <i class="fas fa-eye"></i>
+                                <span>203</span>
+                            </div>
+                            <div class="video-stat">
+                                <i class="fas fa-thumbs-up"></i>
+                                <span>38</span>
+                            </div>
+                            <div class="video-stat">
+                                <i class="fas fa-comment"></i>
+                                <span>9</span>
+                            </div>
+                        </div>
+                        <div class="video-actions">
+                            <div class="action-btn view"><i class="fas fa-eye"></i></div>
+                            <div class="action-btn edit"><i class="fas fa-edit"></i></div>
+                            <div class="action-btn delete"><i class="fas fa-trash"></i></div>
+                            <div class="action-btn analytics"><i class="fas fa-chart-bar"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="https://via.placeholder.com/300x180.png?text=Weather+Patterns" alt="Weather Patterns">
+                        <div class="video-duration">14:50</div>
+                        <div class="video-play-btn">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-details">
+                        <div class="video-title">Tropical Cyclones and Weather Patterns: Visual Guide</div>
+                        <div class="video-meta">
+                            <span>May 5, 2025</span>
+                            <span>Admin User</span>
+                        </div>
+                        <div>
+                            <span class="video-category meteorology">Meteorology</span>
+                            <span class="video-access premium">Premium</span>
+                        </div>
+                        <div class="video-stats">
+                            <div class="video-stat">
+                                <i class="fas fa-eye"></i>
+                                <span>167</span>
+                            </div>
+                            <div class="video-stat">
+                                <i class="fas fa-thumbs-up"></i>
+                                <span>24</span>
+                            </div>
+                            <div class="video-stat">
+                                <i class="fas fa-comment"></i>
+                                <span>6</span>
+                            </div>
+                        </div>
+                        <div class="video-actions">
+                            <div class="action-btn view"><i class="fas fa-eye"></i></div>
+                            <div class="action-btn edit"><i class="fas fa-edit"></i></div>
+                            <div class="action-btn delete"><i class="fas fa-trash"></i></div>
+                            <div class="action-btn analytics"><i class="fas fa-chart-bar"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="https://via.placeholder.com/300x180.png?text=Marine+Engine+Cooling" alt="Marine Engine Cooling">
+                        <div class="video-duration">16:28</div>
+                        <div class="video-play-btn">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-details">
+                        <div class="video-title">Marine Engine Cooling Systems: Complete Guide</div>
+                        <div class="video-meta">
+                            <span>Apr 28, 2025</span>
+                            <span>Admin User</span>
+                        </div>
+                        <div>
+                            <span class="video-category engineering">Engineering</span>
+                            <span class="video-access basic">Basic</span>
+                        </div>
+                        <div class="video-stats">
+                            <div class="video-stat">
+                                <i class="fas fa-eye"></i>
+                                <span>189</span>
+                            </div>
+                            <div class="video-stat">
+                                <i class="fas fa-thumbs-up"></i>
+                                <span>29</span>
+                            </div>
+                            <div class="video-stat">
+                                <i class="fas fa-comment"></i>
+                                <span>7</span>
+                            </div>
+                        </div>
+                        <div class="video-actions">
+                            <div class="action-btn view"><i class="fas fa-eye"></i></div>
+                            <div class="action-btn edit"><i class="fas fa-edit"></i></div>
+                            <div class="action-btn delete"><i class="fas fa-trash"></i></div>
+                            <div class="action-btn analytics"><i class="fas fa-chart-bar"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pagination">
+                <button class="pagination-btn"><i class="fas fa-chevron-left"></i></button>
+                <button class="pagination-btn active">1</button>
+                <button class="pagination-btn">2</button>
+                <button class="pagination-btn">3</button>
+                <button class="pagination-btn">4</button>
+                <button class="pagination-btn">5</button>
+                <button class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <div class="pagination-info">
+                Showing 1 to 6 of 32 entries
+            </div>
+        </div>
+    </div>
+
+    <!-- Include JavaScript files -->
+    <script src="js/main.js"></script>
+    <script src="js/videos.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/quick-actions.js"></script>
+</body>
+</html>
