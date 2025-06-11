@@ -122,6 +122,7 @@ if ($conn) {
     <link rel="stylesheet" href="../css/consolidated.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
     <style>
         .admin-container {
             padding: 2rem;
@@ -134,42 +135,82 @@ if ($conn) {
             justify-content: space-between;
             align-items: center;
             margin-bottom: 2rem;
+            background: var(--gradient-primary);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            color: white;
         }
         
         .admin-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--dark-text);
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0;
         }
         
-        .probable-table {
-            width: 100%;
-            border-collapse: collapse;
+        .probable-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
             margin-bottom: 2rem;
+        }
+        
+        .probable-card {
             background: white;
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
+            padding: 1.5rem;
+            transition: var(--transition);
         }
         
-        .probable-table th,
-        .probable-table td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid #eee;
+        .probable-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
         
-        .probable-table th {
-            background: #f8f9fa;
+        .probable-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .probable-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark-text);
+            margin: 0;
+        }
+        
+        .probable-stats {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .probable-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
             font-weight: 600;
         }
         
-        .probable-table tr:last-child td {
-            border-bottom: none;
+        .badge-success {
+            background: var(--success-light);
+            color: var(--success);
         }
         
-        .action-buttons {
-            display: flex;
-            gap: 0.5rem;
+        .badge-warning {
+            background: var(--warning-light);
+            color: var(--warning);
         }
         
         .modal {
@@ -181,6 +222,7 @@ if ($conn) {
             height: 100%;
             background: rgba(0, 0, 0, 0.5);
             z-index: 1000;
+            backdrop-filter: blur(5px);
         }
         
         .modal-content {
@@ -192,6 +234,18 @@ if ($conn) {
             padding: 2rem;
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
         
         .modal-close {
@@ -201,98 +255,166 @@ if ($conn) {
             font-size: 1.5rem;
             cursor: pointer;
             color: #666;
+            transition: var(--transition);
+        }
+        
+        .modal-close:hover {
+            color: var(--primary-color);
         }
         
         .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
         
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
+            color: var(--dark-text);
         }
         
         .form-group input[type="text"],
         .form-group input[type="number"],
         .form-group input[type="file"] {
             width: 100%;
-            padding: 0.5rem;
+            padding: 0.75rem;
             border: 1px solid #ddd;
             border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+        
+        .form-group input[type="text"]:focus,
+        .form-group input[type="number"]:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px var(--primary-light);
         }
         
         .form-group input[type="checkbox"] {
             margin-right: 0.5rem;
         }
         
-        .badge {
-            display: inline-block;
-            padding: 0.25rem 0.5rem;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            font-weight: 600;
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
         }
         
-        .badge-success {
-            background: #dcfce7;
-            color: #166534;
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            transition: var(--transition);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         
-        .badge-warning {
-            background: #fef3c7;
-            color: #92400e;
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+        
+        .btn-outline:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+            border: none;
+        }
+        
+        .btn-danger:hover {
+            background: var(--danger-dark);
+            transform: translateY(-2px);
         }
     </style>
 </head>
 <body>
-    <div class="admin-container">
-        <div class="admin-header">
-            <h1 class="admin-title">Manage Probables</h1>
-            <button class="btn btn-primary" onclick="openAddModal()">
-                <i class="fas fa-plus"></i> Add New Probable
-            </button>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="../index.html" class="logo" aria-label="MarineMonks Home">
+                    <img src="../images/logo/logo-new.webp" alt="MarineMonks Logo" width="50" height="50">
+                    <span class="logo-text">MarineMonks</span>
+                </a>
+                
+                <div class="mobile-menu-toggle" aria-expanded="false" aria-label="Toggle navigation menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+                
+                <ul class="nav-links">
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="../study-material.html">Study Material</a></li>
+                    <li><a href="../mock-tests.html">Mock Tests</a></li>
+                    <li><a href="../papers.html">Papers</a></li>
+                    <li><a href="../probables.php">Probables</a></li>
+                </ul>
+                
+                <div class="auth-buttons">
+                    <a href="../user/dashboard.php" class="btn btn-outline">Dashboard</a>
+                    <a href="../logout.php" class="btn btn-primary">Logout</a>
+                </div>
+            </nav>
         </div>
-        
-        <table class="probable-table">
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Year</th>
-                    <th>Views</th>
-                    <th>Downloads</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
+    </header>
+
+    <main>
+        <div class="admin-container">
+            <div class="admin-header">
+                <h1 class="admin-title">Manage Probables</h1>
+                <button class="btn btn-primary" onclick="openAddModal()">
+                    <i class="fas fa-plus"></i> Add New Probable
+                </button>
+            </div>
+            
+            <div class="probable-grid">
                 <?php foreach ($probables as $probable): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($probable['title']); ?></td>
-                        <td><?php echo $probable['year']; ?></td>
-                        <td><?php echo $probable['views']; ?></td>
-                        <td><?php echo $probable['downloads']; ?></td>
-                        <td>
+                    <div class="probable-card">
+                        <div class="probable-header">
+                            <h3 class="probable-title"><?php echo htmlspecialchars($probable['title']); ?></h3>
                             <?php if ($probable['coming_soon']): ?>
                                 <span class="badge badge-warning">Coming Soon</span>
                             <?php else: ?>
                                 <span class="badge badge-success">Available</span>
                             <?php endif; ?>
-                        </td>
-                        <td class="action-buttons">
+                        </div>
+                        
+                        <div class="probable-stats">
+                            <span><i class="fas fa-eye"></i> <?php echo $probable['views']; ?> views</span>
+                            <span><i class="fas fa-download"></i> <?php echo $probable['downloads']; ?> downloads</span>
+                        </div>
+                        
+                        <div class="probable-actions">
                             <button class="btn btn-outline" onclick="openEditModal(<?php echo htmlspecialchars(json_encode($probable)); ?>)">
-                                <i class="fas fa-edit"></i>
+                                <i class="fas fa-edit"></i> Edit
                             </button>
-                            <button class="btn btn-outline" onclick="confirmDelete(<?php echo $probable['id']; ?>)">
-                                <i class="fas fa-trash"></i>
+                            <button class="btn btn-danger" onclick="confirmDelete(<?php echo $probable['id']; ?>)">
+                                <i class="fas fa-trash"></i> Delete
                             </button>
-                        </td>
-                    </tr>
+                        </div>
+                    </div>
                 <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
-    
+            </div>
+        </div>
+    </main>
+
     <!-- Add Modal -->
     <div id="addModal" class="modal">
         <div class="modal-content">
@@ -317,13 +439,15 @@ if ($conn) {
                 </div>
                 
                 <div class="form-group">
-                    <label>
+                    <label class="checkbox-label">
                         <input type="checkbox" name="coming_soon">
                         Mark as Coming Soon
                     </label>
                 </div>
                 
-                <button type="submit" class="btn btn-primary">Add Probable</button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Add Probable
+                </button>
             </form>
         </div>
     </div>
@@ -353,13 +477,15 @@ if ($conn) {
                 </div>
                 
                 <div class="form-group">
-                    <label>
+                    <label class="checkbox-label">
                         <input type="checkbox" name="coming_soon" id="edit_coming_soon">
                         Mark as Coming Soon
                     </label>
                 </div>
                 
-                <button type="submit" class="btn btn-primary">Update Probable</button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Update Probable
+                </button>
             </form>
         </div>
     </div>
@@ -373,13 +499,74 @@ if ($conn) {
                 <input type="hidden" name="action" value="delete">
                 <input type="hidden" name="id" id="delete_id">
                 <div class="action-buttons">
-                    <button type="button" class="btn btn-outline" onclick="closeDeleteModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Delete</button>
+                    <button type="button" class="btn btn-outline" onclick="closeDeleteModal()">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
                 </div>
             </form>
         </div>
     </div>
-    
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <a href="../index.html" class="footer-logo">
+                        <img src="../images/logo/logo-new.webp" alt="MarineMonks Logo" width="40" height="40">
+                        <span>MarineMonks</span>
+                    </a>
+                    <p>India's premier marine engineering educational platform for MEO Class 4 exam preparation.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="../study-material.html">Study Material</a></li>
+                        <li><a href="../mock-tests.html">Mock Tests</a></li>
+                        <li><a href="../papers.html">Papers</a></li>
+                        <li><a href="../probables.php">Probables</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="../contact.html">Contact Us</a></li>
+                        <li><a href="../faq.html">FAQ</a></li>
+                        <li><a href="../help.html">Help Center</a></li>
+                        <li><a href="../feedback.html">Feedback</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="../privacy.html">Privacy Policy</a></li>
+                        <li><a href="../terms.html">Terms of Service</a></li>
+                        <li><a href="../refund.html">Refund Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 MarineMonks. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/navigation.js"></script>
     <script>
         // Modal functions
         function openAddModal() {
