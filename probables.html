@@ -284,6 +284,7 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
+            position: relative;
         }
 
         .latest-probable-card h2 {
@@ -320,12 +321,96 @@
             border-color: var(--secondary-color);
         }
 
+        /* Premium Lock Overlay */
+        .premium-lock-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            border-radius: var(--border-radius);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .premium-lock-overlay .lock-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #ffd700;
+        }
+
+        .premium-lock-overlay h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .premium-lock-overlay p {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            opacity: 0.9;
+            max-width: 400px;
+        }
+
+        .premium-unlock-btn {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #333;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .premium-unlock-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+            background: linear-gradient(135deg, #ffed4e, #ffd700);
+        }
+
+        .premium-unlock-btn i {
+            font-size: 1.1rem;
+        }
+
+        /* Hidden state for premium content */
+        .premium-content {
+            display: none;
+        }
+
+        .premium-content.show {
+            display: flex;
+        }
+
         @media (max-width: 768px) {
             .latest-probable-card h2 {
                 font-size: 2rem;
             }
             .latest-probable-card .btn-group {
                 flex-direction: column;
+            }
+            .premium-lock-overlay .lock-icon {
+                font-size: 3rem;
+            }
+            .premium-lock-overlay h3 {
+                font-size: 1.5rem;
+            }
+            .premium-unlock-btn {
+                font-size: 1.1rem;
+                padding: 12px 25px;
             }
         }
     </style>
@@ -563,6 +648,9 @@
             }
         ];
 
+        // Simulate user premium status (this would come from backend in real implementation)
+        const isPremium = false; // Change to true to test premium user experience
+
         function renderProbables(data) {
             const probablesListDiv = document.getElementById('probablesList');
             probablesListDiv.innerHTML = '';
@@ -573,25 +661,58 @@
             // Render Latest Probable Card
             const latestProbableCard = document.getElementById('latestProbableCard');
             if (latestProbable) {
-                latestProbableCard.innerHTML = `
-                    <h2>${latestProbable.title}</h2>
-                    <p class="meta-info">
-                        ${latestProbable.tags.length > 0 ? `<span>${latestProbable.tags.join(', ')}</span> | ` : ''}
-                        ${latestProbable.date ? `<span>${latestProbable.date}</span>` : ''}
-                    </p>
-                    <div class="btn-group">
-                        ${!latestProbable.comingSoon ? `
-                            <button class="btn preview-btn" data-file="${latestProbable.file}" data-title="${latestProbable.title}">
-                                <i class="fas fa-eye"></i>
-                                Preview
-                            </button>
-                            <button class="btn download-btn" data-file="${latestProbable.file}">
-                                <i class="fas fa-download"></i>
-                                Download
-                            </button>
-                        ` : `<span class="tag coming-soon-tag">Coming Soon</span>`}
-                    </div>
-                `;
+                if (isPremium) {
+                    // Premium user - show full content
+                    latestProbableCard.innerHTML = `
+                        <h2>${latestProbable.title}</h2>
+                        <p class="meta-info">
+                            ${latestProbable.tags.length > 0 ? `<span>${latestProbable.tags.join(', ')}</span> | ` : ''}
+                            ${latestProbable.date ? `<span>${latestProbable.date}</span>` : ''}
+                        </p>
+                        <div class="btn-group premium-content show">
+                            ${!latestProbable.comingSoon ? `
+                                <button class="btn preview-btn" data-file="${latestProbable.file}" data-title="${latestProbable.title}">
+                                    <i class="fas fa-eye"></i>
+                                    Preview
+                                </button>
+                                <button class="btn download-btn" data-file="${latestProbable.file}">
+                                    <i class="fas fa-download"></i>
+                                    Download
+                                </button>
+                            ` : `<span class="tag coming-soon-tag">Coming Soon</span>`}
+                        </div>
+                    `;
+                } else {
+                    // Non-premium user - show locked content
+                    latestProbableCard.innerHTML = `
+                        <h2>${latestProbable.title}</h2>
+                        <p class="meta-info">
+                            ${latestProbable.tags.length > 0 ? `<span>${latestProbable.tags.join(', ')}</span> | ` : ''}
+                            ${latestProbable.date ? `<span>${latestProbable.date}</span>` : ''}
+                        </p>
+                        <div class="btn-group premium-content">
+                            ${!latestProbable.comingSoon ? `
+                                <button class="btn preview-btn" data-file="${latestProbable.file}" data-title="${latestProbable.title}">
+                                    <i class="fas fa-eye"></i>
+                                    Preview
+                                </button>
+                                <button class="btn download-btn" data-file="${latestProbable.file}">
+                                    <i class="fas fa-download"></i>
+                                    Download
+                                </button>
+                            ` : `<span class="tag coming-soon-tag">Coming Soon</span>`}
+                        </div>
+                        <div class="premium-lock-overlay">
+                            <i class="fas fa-lock lock-icon"></i>
+                            <h3>Premium Content</h3>
+                            <p>This latest probable is exclusive to Pro members. Upgrade now to access the most recent exam probables!</p>
+                            <a href="pricing.html" class="premium-unlock-btn">
+                                <i class="fas fa-unlock"></i>
+                                Unlock This with Pro Membership
+                            </a>
+                        </div>
+                    `;
+                }
                 latestProbableCard.style.display = 'flex';
             } else {
                 latestProbableCard.style.display = 'none';

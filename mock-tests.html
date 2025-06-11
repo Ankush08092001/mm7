@@ -138,6 +138,73 @@
         .test-tab:hover:not(.active) {
             background-color: #eee;
         }
+        .coming-soon-indicator {
+            background-color: #fbbf24;
+            color: #92400e;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        
+        /* Locked content overlay styles */
+        .locked-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(3px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--border-radius);
+            z-index: 10;
+        }
+        
+        .locked-icon {
+            font-size: 3rem;
+            color: #d97706;
+            margin-bottom: 15px;
+            animation: pulse 2s infinite;
+        }
+        
+        .locked-message {
+            text-align: center;
+            color: #374151;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .unlock-btn {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .unlock-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(217, 119, 6, 0.3);
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .test-card {
+            position: relative;
+        }
     </style>
 <script src="js/navigation.js" defer></script>
 </head>
@@ -213,169 +280,7 @@
 
             <!-- Test Cards -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <!-- Test Card 1 -->
-                <div class="test-card animate-on-scroll">
-                    <div class="test-card-content">
-                        <div class="test-card-header">
-                            <span class="free-badge">FREE</span>
-                            <div class="rating">
-                                <span class="rating-score">4.8</span>
-                                <div>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <h3 class="test-card-title">MEO Class 4 Written Mock Test</h3>
-                        <div class="test-stats">
-                            <div class="test-stat">
-                                <div class="test-stat-icon">
-                                    <i class="fas fa-question"></i>
-                                </div>
-                                <span class="test-stat-value">9 Questions</span>
-                            </div>
-                            <div class="test-stat">
-                                <div class="test-stat-icon">
-                                    <i class="fas fa-clock"></i>
-                                </div>
-                                <span class="test-stat-value">3 hours</span>
-                            </div>
-                            <div class="test-stat">
-                                <div class="test-stat-icon">
-                                    <i class="fas fa-users"></i>
-                                </div>
-                                <span class="test-stat-value">1245 attempted</span>
-                            </div>
-                        </div>
-                        <a href="mock-test.html" class="start-test-btn">Start Test</a>
-                    </div>
-                </div>
-
-                <!-- Test Card 2 -->
-                <div class="test-card animate-on-scroll">
-                    <div class="test-card-content">
-                        <div class="test-card-header">
-                            <span class="free-badge">FREE</span>
-                            <div class="rating">
-                                <span class="rating-score">4.7</span>
-                                <div>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <h3 class="test-card-title">Safety Management Mock Test</h3>
-                        <div class="test-stats">
-                            <div class="test-stat">
-                                <div class="test-stat-icon">
-                                    <i class="fas fa-question"></i>
-                                </div>
-                                <span class="test-stat-value">9 Questions</span>
-                            </div>
-                            <div class="test-stat">
-                                <div class="test-stat-icon">
-                                    <i class="fas fa-clock"></i>
-                                </div>
-                                <span class="test-stat-value">3 hours</span>
-                            </div>
-                            <div class="test-stat">
-                                <div class="test-stat-icon">
-                                    <i class="fas fa-users"></i>
-                                </div>
-                                <span class="test-stat-value">980 attempted</span>
-                            </div>
-                        </div>
-                        <a href="mock-test.html" class="start-test-btn">Start Test</a>
-                    </div>
-                </div>
-
-                <!-- Test Card 3 -->
-                <div class="test-card animate-on-scroll">
-                    <div class="test-card-content">
-                        <div class="test-card-header">
-                            <span class="premium-badge">PREMIUM</span>
-                            <div class="rating">
-                                <span class="rating-score">4.9</span>
-                                <div>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <h3 class="test-card-title">Function 1 - Marine Engineering</h3>
-                        <div class="test-stats">
-                            <div class="test-stat">
-                                <div class="test-stat-icon">
-                                    <i class="fas fa-question"></i>
-                                </div>
-                                <span class="test-stat-value">9 Questions</span>
-                            </div>
-                            <div class="test-stat">
-                                <div class="test-stat-icon">
-                                    <i class="fas fa-clock"></i>
-                                </div>
-                                <span class="test-stat-value">3 hours</span>
-                            </div>
-                            <div class="test-stat">
-                                <div class="test-stat-icon">
-                                    <i class="fas fa-users"></i>
-                                </div>
-                                <span class="test-stat-value">1560 attempted</span>
-                            </div>
-                        </div>
-                        <a href="mock-test.html" class="start-test-btn">Start Test</a>
-                    </div>
-                </div>
-
-                <!-- Test Card 4 -->
-                <div class="test-card animate-on-scroll">
-                    <div class="test-card-content">
-                        <div class="test-card-header">
-                            <span class="premium-badge">PREMIUM</span>
-                            <div class="rating">
-                                <span class="rating-score">4.8</span>
-                                <div>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <h3 class="test-card-title">Function 2 - Electrical Systems</h3>
-                        <div class="test-stats">
-                            <div class="test-stat">
-                                <div class="test-stat-icon">
-                                    <i class="fas fa-question"></i>
-                                </div>
-                                <span class="test-stat-value">9 Questions</span>
-                            </div>
-                            <div class="test-stat">
-                                <div class="test-stat-icon">
-                                    <i class="fas fa-clock"></i>
-                                </div>
-                                <span class="test-stat-value">3 hours</span>
-                            </div>
-                            <div class="test-stat">
-                                <div class="test-stat-icon">
-                                    <i class="fas fa-users"></i>
-                                </div>
-                                <span class="test-stat-value">1120 attempted</span>
-                            </div>
-                        </div>
-                        <a href="mock-test.html" class="start-test-btn">Start Test</a>
-                    </div>
-                </div>
+                <!-- Test cards will be dynamically generated by JavaScript -->
             </div>
 
             <!-- More Tests Button -->
@@ -417,21 +322,21 @@
                 </div>
                 
                 <div class="footer-col">
-                    <h4>Legal</h4>
+                    <h4>Support</h4>
                     <ul>
-                        <li><a href="#">Terms of Service</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Refund Policy</a></li>
-                        
+                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                        <li><a href="help.html">Help Center</a></li>
+                        <li><a href="feedback.html">Feedback</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-col">
-                    <h4>Contact Us</h4>
-                    <ul class="contact-info">
-                        <li><i class="fas fa-envelope"></i> support@marinemonks.com</li>
-                        <li><i class="fas fa-phone"></i> +91 98765 43210</li>
-                        <li><i class="fas fa-map-marker-alt"></i> Mumbai, Maharashtra, India</li>
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                        <li><a href="refund.html">Refund Policy</a></li>
                     </ul>
                 </div>
             </div>
@@ -442,63 +347,15 @@
         </div>
     </footer>
 
+    <!-- Include JavaScript files -->
+    <script src="js/mockTestsData.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Test tab switching
-            const testTabs = document.querySelectorAll('.test-tab');
-            const oralTab = document.querySelector('.test-tab:nth-child(2)');
-            
-            testTabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    // Don't allow clicking on the oral tab since it's coming soon
-                    if (this === oralTab) {
-                        const comingSoon = this.querySelector('.coming-soon');
-                        comingSoon.classList.add('pulse');
-                        setTimeout(() => {
-                            comingSoon.classList.remove('pulse');
-                        }, 1000);
-                        return;
-                    }
-                    
-                    testTabs.forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                });
-            });
-            
-            // Animation for test cards
-            const testCards = document.querySelectorAll('.test-card');
-            
-            function animateTestCards() {
-                testCards.forEach((card, index) => {
-                    setTimeout(() => {
-                        card.classList.add('visible');
-                    }, 100 * index);
-                });
-            }
-            
-            // Initialize animations
-            window.addEventListener('load', function() {
-                animateTestCards();
-            });
-            
-            // Animate on scroll elements
-            const animateOnScroll = function() {
-                const elements = document.querySelectorAll('.animate-on-scroll');
-                
-                elements.forEach(element => {
-                    const elementPosition = element.getBoundingClientRect().top;
-                    const windowHeight = window.innerHeight;
-                    
-                    if (elementPosition < windowHeight - 50) {
-                        element.classList.add('visible');
-                    }
-                });
-            };
-            
-            // Initial check and add scroll event listener
-            animateOnScroll();
-            window.addEventListener('scroll', animateOnScroll);
-        });
+        console.log('mockTestsData loaded:', typeof mockTestsData !== 'undefined');
+    </script>
+    <script src="js/mockTestsFlow.js"></script>
+    <script>
+        console.log('mockTestsFlow loaded');
     </script>
 </body>
 </html>
+

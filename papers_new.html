@@ -383,6 +383,47 @@
             display: none;
         }
 
+        /* Tab styles similar to mock-tests page */
+        .test-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+        .test-tab {
+            padding: 12px 25px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+        .test-tab:first-child {
+            border-top-left-radius: var(--border-radius);
+            border-bottom-left-radius: var(--border-radius);
+        }
+        .test-tab:last-child {
+            border-top-right-radius: var(--border-radius);
+            border-bottom-right-radius: var(--border-radius);
+        }
+        .test-tab.active {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+        .test-tab:not(.active) {
+            background-color: #f5f5f5;
+            color: #555;
+        }
+        .test-tab:hover:not(.active) {
+            background-color: #eee;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
         @media (max-width: 768px) {
             .subject-tabs {
                 flex-direction: column;
@@ -450,56 +491,72 @@
     <!-- Papers Section -->
     <section class="papers">
         <div class="container">
-            <!-- Step 1: Subject Selection -->
-            <div id="subjectSelection" class="navigation-section">
-                <div class="navigation-header">
-                    <h2>Select Subject</h2>
-                    <p>Choose from the 6 written exam subjects</p>
+            <!-- Tab Navigation -->
+            <div class="test-tabs">
+                <div class="test-tab active" data-tab="subject-month">
+                    <i class="fas fa-calendar-alt"></i> Subject & Month
                 </div>
-                
-                <div class="subject-tabs">
-                    <button class="subject-tab-btn" data-subject="MEK-G">MEK-G</button>
-                    <button class="subject-tab-btn" data-subject="MEK-M">MEK-M</button>
-                    <button class="subject-tab-btn" data-subject="MET">MET</button>
-                    <button class="subject-tab-btn" data-subject="MEP">MEP</button>
-                    <button class="subject-tab-btn" data-subject="NAVAL">NAVAL</button>
-                    <button class="subject-tab-btn" data-subject="SSEP">SSEP</button>
+                <div class="test-tab" data-tab="topics">
+                    <i class="fas fa-tags"></i> Browse by Topic
                 </div>
             </div>
 
-            <!-- Step 2: Month Selection (Grouped by Year) -->
-            <div id="monthSelection" class="navigation-section hidden">
-                <div class="navigation-header">
-                    <h2>Choose Month (Grouped by Year)</h2>
-                    <p>Select the exam month for <span id="selectedSubjectName"></span></p>
+            <!-- Subject/Month Tab Content -->
+            <div id="subject-month-tab" class="tab-content active">
+                <!-- Step 1: Subject Selection -->
+                <div id="subjectSelection" class="navigation-section">
+                    <div class="navigation-header">
+                        <h2>Select Subject</h2>
+                        <p>Choose from the 6 written exam subjects</p>
+                    </div>
+                    
+                    <div class="subject-tabs">
+                        <button class="subject-tab-btn" data-subject="MEK-G">MEK-G</button>
+                        <button class="subject-tab-btn" data-subject="MEK-M">MEK-M</button>
+                        <button class="subject-tab-btn" data-subject="MET">MET</button>
+                        <button class="subject-tab-btn" data-subject="MEP">MEP</button>
+                        <button class="subject-tab-btn" data-subject="NAVAL">NAVAL</button>
+                        <button class="subject-tab-btn" data-subject="SSEP">SSEP</button>
+                    </div>
                 </div>
-                
-                <div id="yearMonthGrid" class="year-month-grid">
-                    <!-- Year groups will be populated by JavaScript -->
-                </div>
-                
-                <div style="text-align: center; margin-top: 30px;">
-                    <button id="backToSubjects" class="btn btn-outline">
-                        <i class="fas fa-arrow-left"></i> Back to Subjects
-                    </button>
+
+                <!-- Step 2: Month Selection (Grouped by Year) -->
+                <div id="monthSelection" class="navigation-section hidden">
+                    <div class="navigation-header">
+                        <h2>Choose Month (Grouped by Year)</h2>
+                        <p>Select the exam month for <span id="selectedSubjectName"></span></p>
+                    </div>
+                    
+                    <div id="yearMonthGrid" class="year-month-grid">
+                        <!-- Year groups will be populated by JavaScript -->
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button id="backToSubjects" class="btn btn-outline">
+                            <i class="fas fa-arrow-left"></i> Back to Subjects
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <!-- Topic-Based Section -->
-            <div id="topicSection" class="topic-section">
-                <div class="topic-header">
-                    <h3>Browse by Topic</h3>
-                    <p>Find papers related to specific topics across all subjects</p>
-                </div>
-                
-                <div id="topicGrid" class="topic-grid">
-                    <!-- Topics will be populated by JavaScript -->
-                </div>
-                
-                <div id="topicResults" class="hidden">
-                    <h4 id="topicResultsTitle"></h4>
-                    <div id="topicPapersList">
-                        <!-- Topic-filtered papers will be displayed here -->
+            <!-- Topics Tab Content -->
+            <div id="topics-tab" class="tab-content" style="display: none;">
+                <!-- Topic-Based Section -->
+                <div id="topicSection" class="topic-section">
+                    <div class="topic-header">
+                        <h3>Browse by Topic</h3>
+                        <p>Find papers related to specific topics across all subjects</p>
+                    </div>
+                    
+                    <div id="topicGrid" class="topic-grid">
+                        <!-- Topics will be populated by JavaScript -->
+                    </div>
+                    
+                    <div id="topicResults" class="hidden">
+                        <h4 id="topicResultsTitle"></h4>
+                        <div id="topicPapersList">
+                            <!-- Topic-filtered papers will be displayed here -->
+                        </div>
                     </div>
                 </div>
             </div>

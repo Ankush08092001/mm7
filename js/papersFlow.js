@@ -19,6 +19,50 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize the page
     init();
+    initializeTabSwitching();
+    
+    function initializeTabSwitching() {
+        const tabs = document.querySelectorAll('.test-tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const targetTab = this.getAttribute('data-tab');
+                
+                // Remove active class from all tabs and contents
+                tabs.forEach(t => t.classList.remove('active'));
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                    content.style.display = 'none';
+                });
+                
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Show corresponding content
+                const targetContent = document.getElementById(targetTab + '-tab');
+                if (targetContent) {
+                    targetContent.classList.add('active');
+                    targetContent.style.display = 'block';
+                }
+                
+                // Reset subject/month navigation when switching to topics tab
+                if (targetTab === 'topics') {
+                    resetSubjectMonthNavigation();
+                }
+            });
+        });
+    }
+    
+    function resetSubjectMonthNavigation() {
+        currentStep = 'subjects';
+        currentSubject = null;
+        subjectSelection.classList.remove('hidden');
+        monthSelection.classList.add('hidden');
+        
+        // Remove active state from subject tabs
+        subjectTabBtns.forEach(btn => btn.classList.remove('active'));
+    }
     
     function init() {
         setupSubjectTabs();

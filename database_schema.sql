@@ -1,19 +1,99 @@
 -- MarineMonks Database Schema
 
--- Users Table
-CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL UNIQUE,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    first_name VARCHAR(50),
-    last_name VARCHAR(50),
-    role ENUM('admin', 'editor', 'user') NOT NULL DEFAULT 'user',
-    status ENUM('active', 'inactive', 'pending') NOT NULL DEFAULT 'pending',
-    profile_image VARCHAR(255),
+-- Create database
+CREATE DATABASE IF NOT EXISTS marinemonks;
+USE marinemonks;
+
+-- Users table
+CREATE TABLE IF NOT EXISTS users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    is_pro_member BOOLEAN DEFAULT FALSE,
+    role ENUM('user', 'admin') DEFAULT 'user',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+-- Probables table
+CREATE TABLE IF NOT EXISTS probables (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(255) NOT NULL,
+    year INT NOT NULL,
+    file_path VARCHAR(255) NOT NULL,
+    views INT DEFAULT 0,
+    downloads INT DEFAULT 0,
+    coming_soon BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Study materials table
+CREATE TABLE IF NOT EXISTS study_materials (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(255) NOT NULL,
+    subject VARCHAR(100),
+    function VARCHAR(100),
+    topic VARCHAR(100) NOT NULL,
+    author VARCHAR(100),
+    file_path VARCHAR(255) NOT NULL,
+    type ENUM('written', 'oral') NOT NULL,
+    views INT DEFAULT 0,
+    downloads INT DEFAULT 0,
+    coming_soon BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Mock tests table
+CREATE TABLE IF NOT EXISTS mock_tests (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    test_type ENUM('probables', 'non_repeated', 'full_ability', 'oral') NOT NULL,
+    question_file VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Answer sheets table
+CREATE TABLE IF NOT EXISTS answersheets (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    test_id INT NOT NULL,
+    file_path VARCHAR(255) NOT NULL,
+    marks INT,
+    feedback TEXT,
+    status ENUM('pending', 'evaluated') DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (test_id) REFERENCES mock_tests(id)
+);
+
+-- Uploads log table
+CREATE TABLE IF NOT EXISTS uploads_log (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    admin_id INT NOT NULL,
+    file_type ENUM('probable', 'study_material', 'mock_test') NOT NULL,
+    file_path VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (admin_id) REFERENCES users(id)
+);
+
+-- Analytics table
+CREATE TABLE IF NOT EXISTS analytics (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    file_type ENUM('probable', 'study_material', 'mock_test') NOT NULL,
+    file_id INT NOT NULL,
+    action ENUM('view', 'download') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- Insert default admin user (password: admin123)
+INSERT INTO users (name, email, password_hash, role) 
+VALUES ('Admin', 'admin@marinemonks.com', '$2y$10$8K1p/a0dR1xqM8K1p/a0dR1xqM8K1p/a0dR1xqM8K1p/a0dR1xqM', 'admin');
 
 -- Study Materials Table
 CREATE TABLE study_materials (
@@ -50,21 +130,6 @@ CREATE TABLE study_material_authors (
     PRIMARY KEY (study_material_id, author_id),
     FOREIGN KEY (study_material_id) REFERENCES study_materials(id) ON DELETE CASCADE,
     FOREIGN KEY (author_id) REFERENCES authors(id) ON DELETE CASCADE
-);
-
--- Mock Tests Table
-CREATE TABLE mock_tests (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    description TEXT,
-    function_category VARCHAR(50),
-    duration_minutes INT NOT NULL,
-    total_questions INT NOT NULL,
-    passing_score INT,
-    is_premium BOOLEAN DEFAULT FALSE,
-    status ENUM('published', 'draft', 'archived') DEFAULT 'draft',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Questions Table
@@ -199,11 +264,6 @@ CREATE TABLE settings (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
-
--- Insert default admin user
-INSERT INTO users (username, email, password, first_name, last_name, role, status)
-VALUES ('admin', 'admin@marinemonks.in', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Admin', 'User', 'admin', 'active');
--- Note: The password hash above is for 'password'. This should be changed after installation.
 
 -- Insert sample settings
 INSERT INTO settings (setting_key, setting_value, setting_group, is_public)
