@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Probables - MarineMonks</title>
+    <meta name="description" content="Review probable topics for the MEO Class 4 exam with MarineMonks. Quick revision notes, key points, and images for last-minute preparation.">
+    <link rel="stylesheet" href="css/consolidated.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="canonical" href="https://www.marinemonks.in/probables.html">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <style>
+        /* Custom styles for the Probables page redesign to match homepage */
+        .page-content {
+            padding: 60px 0;
+            background-color: var(--light-bg);
+        }
+
+        .search-filter-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .search-filter-bar input[type="text"],
+        .search-filter-bar select {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-family: inherit;
+            box-shadow: var(--box-shadow);
+            transition: all 0.3s ease;
+        }
+
+        .search-filter-bar input[type="text"]:focus,
+        .search-filter-bar select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.2);
+            outline: none;
+        }
+
+        .year-section {
+            margin-bottom: 25px;
+            border: 1px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            background-color: #fff;
+        }
+
+        .year-header {
+            background-color: #f8f9fa;
+            padding: 18px 25px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--dark-text);
+            border-bottom: 1px solid #e0e0e0;
+            transition: background-color 0.3s ease;
+        }
+
+        .year-header:hover {
+            background-color: #e9ecef;
+        }
+
+        .year-header .arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .year-header.collapsed .arrow {
+            transform: rotate(-90deg);
+        }
+
+        .year-content {
+            padding: 20px 25px;
+            display: none; /* Hidden by default */
+        }
+
+        .year-content.expanded {
+            display: block;
+        }
+
+        .file-item {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px dashed #e9ecef;
+        }
+
+        .file-item:last-child {
+            border-bottom: none;
+        }
+
+        .file-info {
+            flex-grow: 1;
+            margin-bottom: 10px;
+        }
+
+        .file-info h4 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .file-meta {
+            font-size: 0.9rem;
+            color: #6c757d;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .file-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .file-tags {
+            margin-top: 10px;
+        }
+
+        .tag {
+            display: inline-block;
+            background-color: #e0f7fa;
+            color: var(--primary-color);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-right: 8px;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .coming-soon-tag {
+            background-color: #ffc107;
+            color: #343a40;
+            font-weight: 700;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .file-actions button {
+            padding: 10px 18px;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+        }
+
+        .file-actions button.preview-btn {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .file-actions button.preview-btn:hover {
+            background-color: #00a080;
+            transform: translateY(-2px);
+        }
+
+        .file-actions button.download-btn {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .file-actions button.download-btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .file-actions svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* PDF Preview Modal */
+        .pdf-modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.8); /* Black w/ opacity */
+            justify-content: center;
+            align-items: center;
+        }
+        .pdf-modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 90%;
+            height: 90%;
+            display: flex;
+            flex-direction: column;
+            border-radius: 8px;
+        }
+        .pdf-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 15px;
+        }
+        .pdf-modal-header h3 {
+            margin: 0;
+            color: #333;
+        }
+        .pdf-modal-close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .pdf-modal-close:hover,
+        .pdf-modal-close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .pdf-viewer-frame {
+            flex-grow: 1;
+            border: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .search-filter-bar {
+                flex-direction: column;
+            }
+            .file-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .file-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            .file-actions button {
+                margin-left: 0;
+                margin-right: 5px;
+            }
+        }
+
+        /* Latest Probable Card */
+        .latest-probable-card {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            margin-bottom: 40px;
+            box-shadow: var(--box-shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .latest-probable-card h2 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .latest-probable-card .meta-info {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .latest-probable-card .btn-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        .latest-probable-card .btn-group .btn {
+            background-color: white;
+            color: var(--primary-color);
+            border: 2px solid white;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+        }
+
+        .latest-probable-card .btn-group .btn:hover {
+            background-color: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+
+        /* Premium Lock Overlay */
+        .premium-lock-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            border-radius: var(--border-radius);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .premium-lock-overlay .lock-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #ffd700;
+        }
+
+        .premium-lock-overlay h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .premium-lock-overlay p {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            opacity: 0.9;
+            max-width: 400px;
+        }
+
+        .premium-unlock-btn {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #333;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .premium-unlock-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+            background: linear-gradient(135deg, #ffed4e, #ffd700);
+        }
+
+        .premium-unlock-btn i {
+            font-size: 1.1rem;
+        }
+
+        /* Hidden state for premium content */
+        .premium-content {
+            display: none;
+        }
+
+        .premium-content.show {
+            display: flex;
+        }
+
+        @media (max-width: 768px) {
+            .latest-probable-card h2 {
+                font-size: 2rem;
+            }
+            .latest-probable-card .btn-group {
+                flex-direction: column;
+            }
+            .premium-lock-overlay .lock-icon {
+                font-size: 3rem;
+            }
+            .premium-lock-overlay h3 {
+                font-size: 1.5rem;
+            }
+            .premium-unlock-btn {
+                font-size: 1.1rem;
+                padding: 12px 25px;
+            }
+        }
+    </style>
+<script src="js/navigation.js" defer></script>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo" aria-label="MarineMonks Home">
+                    <img src="images/logo/logo-new.webp" alt="MarineMonks Logo" width="50" height="50" loading="lazy">
+                    <span class="logo-text">MarineMonks</span>
+                </a>
+                
+                <div class="mobile-menu-toggle" aria-expanded="false" aria-label="Toggle navigation menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+                
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="study-material.html">Study Material</a></li>
+                    <li><a href="mock-tests.html">Mock Tests</a></li>
+                    <li><a href="papers.html">Papers</a></li>
+                    <li><a href="probables.html" class="active">Probables</a></li>
+                </ul>
+                
+                <div class="auth-buttons">
+                    <a href="login.html" class="btn btn-outline">Login</a>
+                    <a href="signup.html" class="btn btn-primary">Sign Up</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+    <!-- Hero Section -->
+    <section class="hero" id="main-content">
+        <div class="container">
+            <div class="badge animate-fade-in">
+               Your Shortcut to Exam Success
+            </div>
+            
+            <h1 class="animate-fade-in delay-100">Probables <span class="highlight">Topics</span></h1>
+            
+            <p class="animate-fade-in delay-200">
+                Quick revision materials with key points and images for last-minute preparation.
+            </p>
+            
+            <div class="scroll-indicator">
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- Probables Section -->
+    <section class="probables">
+        <div class="container">
+            <!-- Latest Probable Featured at the Top -->
+            <div id="latestProbableCard" class="latest-probable-card">
+                <!-- Content will be loaded by JavaScript -->
+            </div>
+
+            <!-- Search Bar and Filters -->
+            <div class="search-filter-bar">
+                <input type="text" id="searchInput" placeholder="Search for probables...">
+                <select id="functionFilter">
+                    <option value="all">Filter by Function</option>
+                    <option value="Function 1">Function 1</option>
+                    <option value="Function 2">Function 2</option>
+                    <option value="Function 3">Function 3</option>
+                    <option value="Function 4">Function 4</option>
+                    <option value="Oral Prep">Oral Prep</option>
+                </select>
+                <select id="typeFilter">
+                    <option value="all">Filter by Type</option>
+                    <option value="Sketch-based">Sketch-based</option>
+                    <option value="Frequently Asked">Frequently Asked</option>
+                    <option value="Most Repeated">Most Repeated</option>
+                    <option value="Important Topics">Important Topics</option>
+                    <option value="Comprehensive">Comprehensive</option>
+                </select>
+            </div>
+
+            <div id="probablesList">
+                <!-- Probables will be loaded here by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- PDF Preview Modal -->
+    <div id="pdfPreviewModal" class="pdf-modal">
+        <div class="pdf-modal-content">
+            <div class="pdf-modal-header">
+                <h3 id="pdfModalTitle"></h3>
+                <span class="pdf-modal-close">&times;</span>
+            </div>
+            <iframe id="pdfViewerFrame" class="pdf-viewer-frame" frameborder="0"></iframe>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <a href="index.html" class="footer-logo">
+                    <img src="images/logo/logo-new.webp" alt="MarineMonks Logo" width="40">
+                    MarineMonks
+                </a>
+                <p>Your ultimate guide to acing MEO Class 4 exams. Comprehensive study materials, mock tests, and expert guidance.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="study-material.html">Study Material</a></li>
+                    <li><a href="mock-tests.html">Mock Tests</a></li>
+                    <li><a href="papers.html">Papers</a></li>
+                    <li><a href="probables.html">Probables</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                    <li><a href="terms-of-service.html">Terms of Service</a></li>
+                    <li><a href="refund-policy.html">Refund Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contact Us</h4>
+                <ul class="contact-info">
+                    <li><i class="fas fa-map-marker-alt"></i> 123 Marine Drive, Mumbai, India</li>
+                    <li><i class="fas fa-phone"></i> +91 98765 43210</li>
+                    <li><i class="fas fa-envelope"></i> info@marinemonks.com</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 MarineMonks. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/navigation.js"></script>
+    <script>
+        const probablesData = [
+            {
+                id: 'f4b-march-2025',
+                year: 2025,
+                title: 'Function 4B March 2025 – Most Likely Questions',
+                date: 'Jan 15, 2025',
+                views: 245,
+                downloads: 89,
+                tags: ['Function 4B', 'Most Repeated'],
+                file: 'sample-pdfs/function_4b_march_2025.pdf',
+                comingSoon: false,
+                isLatest: true
+            },
+            {
+                id: 'orals-april-2025',
+                year: 2025,
+                title: 'Orals Preparation April 2025 – Common Questions',
+                date: 'Feb 10, 2025',
+                views: 180,
+                downloads: 55,
+                tags: ['Oral Prep', 'Frequently Asked'],
+                file: 'sample-pdfs/orals_april_2025.pdf',
+                comingSoon: false,
+                isLatest: false
+            },
+            {
+                id: 'f3-dec-2024',
+                year: 2024,
+                title: 'Function 3 December 2024 – Sketch Based',
+                date: 'Nov 20, 2024',
+                views: 567,
+                downloads: 234,
+                tags: ['Function 3', 'Sketch-based'],
+                file: 'sample-pdfs/function_3_dec_2024.pdf',
+                comingSoon: false,
+                isLatest: false
+            },
+            {
+                id: 'f4a-nov-2024',
+                year: 2024,
+                title: 'Function 4A November 2024 – Most Repeated',
+                date: 'Oct 15, 2024',
+                views: 432,
+                downloads: 178,
+                tags: ['Function 4', 'Most Repeated'],
+                file: 'sample-pdfs/function_4a_nov_2024.pdf',
+                comingSoon: false,
+                isLatest: false
+            },
+            {
+                id: 'f2-sept-2024',
+                year: 2024,
+                title: 'Function 2 September 2024 – Important Topics',
+                date: 'Aug 01, 2024',
+                views: 300,
+                downloads: 120,
+                tags: ['Function 2', 'Important Topics'],
+                file: 'sample-pdfs/function_2_sept_2024.pdf',
+                comingSoon: false,
+                isLatest: false
+            },
+            {
+                id: 'comp-review-2023',
+                year: 2023,
+                title: 'Comprehensive Review 2023',
+                date: 'Dec 1, 2023',
+                views: 890,
+                downloads: 456,
+                tags: ['Comprehensive'],
+                file: 'sample-pdfs/comprehensive_review_2023.pdf',
+                comingSoon: false,
+                isLatest: false
+            },
+            {
+                id: 'f4b-july-2025',
+                year: 2025,
+                title: 'Function 4B July 2025 – Coming Soon',
+                date: 'May 1, 2025',
+                views: 0,
+                downloads: 0,
+                tags: ['Function 4B'],
+                file: '',
+                comingSoon: true,
+                isLatest: false
+            }
+        ];
+
+        // Simulate user premium status (this would come from backend in real implementation)
+        const isPremium = false; // Change to true to test premium user experience
+
+        function renderProbables(data) {
+            const probablesListDiv = document.getElementById('probablesList');
+            probablesListDiv.innerHTML = '';
+
+            const latestProbable = data.find(item => item.isLatest);
+            const otherProbables = data.filter(item => !item.isLatest);
+
+            // Render Latest Probable Card
+            const latestProbableCard = document.getElementById('latestProbableCard');
+            if (latestProbable) {
+                if (isPremium) {
+                    // Premium user - show full content
+                    latestProbableCard.innerHTML = `
+                        <h2>${latestProbable.title}</h2>
+                        <p class="meta-info">
+                            ${latestProbable.tags.length > 0 ? `<span>${latestProbable.tags.join(', ')}</span> | ` : ''}
+                            ${latestProbable.date ? `<span>${latestProbable.date}</span>` : ''}
+                        </p>
+                        <div class="btn-group premium-content show">
+                            ${!latestProbable.comingSoon ? `
+                                <button class="btn preview-btn" data-file="${latestProbable.file}" data-title="${latestProbable.title}">
+                                    <i class="fas fa-eye"></i>
+                                    Preview
+                                </button>
+                                <button class="btn download-btn" data-file="${latestProbable.file}">
+                                    <i class="fas fa-download"></i>
+                                    Download
+                                </button>
+                            ` : `<span class="tag coming-soon-tag">Coming Soon</span>`}
+                        </div>
+                    `;
+                } else {
+                    // Non-premium user - show locked content
+                    latestProbableCard.innerHTML = `
+                        <h2>${latestProbable.title}</h2>
+                        <p class="meta-info">
+                            ${latestProbable.tags.length > 0 ? `<span>${latestProbable.tags.join(', ')}</span> | ` : ''}
+                            ${latestProbable.date ? `<span>${latestProbable.date}</span>` : ''}
+                        </p>
+                        <div class="btn-group premium-content">
+                            ${!latestProbable.comingSoon ? `
+                                <button class="btn preview-btn" data-file="${latestProbable.file}" data-title="${latestProbable.title}">
+                                    <i class="fas fa-eye"></i>
+                                    Preview
+                                </button>
+                                <button class="btn download-btn" data-file="${latestProbable.file}">
+                                    <i class="fas fa-download"></i>
+                                    Download
+                                </button>
+                            ` : `<span class="tag coming-soon-tag">Coming Soon</span>`}
+                        </div>
+                        <div class="premium-lock-overlay">
+                            <i class="fas fa-lock lock-icon"></i>
+                            <h3>Premium Content</h3>
+                            <p>This latest probable is exclusive to Pro members. Upgrade now to access the most recent exam probables!</p>
+                            <a href="pricing.html" class="premium-unlock-btn">
+                                <i class="fas fa-unlock"></i>
+                                Unlock This with Pro Membership
+                            </a>
+                        </div>
+                    `;
+                }
+                latestProbableCard.style.display = 'flex';
+            } else {
+                latestProbableCard.style.display = 'none';
+            }
+
+            const years = [...new Set(otherProbables.map(item => item.year))].sort((a, b) => b - a);
+
+            years.forEach(year => {
+                const yearSection = document.createElement('div');
+                yearSection.classList.add('year-section');
+
+                const yearHeader = document.createElement('div');
+                yearHeader.classList.add('year-header');
+                yearHeader.innerHTML = `
+                    ${year}
+                    <span class="arrow"><i class="fas fa-chevron-down"></i></span>
+                `;
+                yearSection.appendChild(yearHeader);
+
+                const yearContent = document.createElement('div');
+                yearContent.classList.add('year-content');
+                yearSection.appendChild(yearContent);
+
+                const filesInYear = otherProbables.filter(item => item.year === year);
+
+                filesInYear.forEach(file => {
+                    const fileItem = document.createElement('div');
+                    fileItem.classList.add('file-item');
+                    fileItem.innerHTML = `
+                        <div class="file-info">
+                            <h4>${file.title} ${file.comingSoon ? '<span class="tag coming-soon-tag">Coming Soon</span>' : ''}</h4>
+                            <div class="file-meta">
+                                ${file.date ? `<span><i class="fas fa-calendar-alt"></i> ${file.date}</span>` : ''}
+                                ${file.views ? `<span><i class="fas fa-eye"></i> ${file.views} views</span>` : ''}
+                                ${file.downloads ? `<span><i class="fas fa-download"></i> ${file.downloads} downloads</span>` : ''}
+                            </div>
+                            <div class="file-tags">
+                                ${file.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div class="file-actions">
+                            ${!file.comingSoon ? `
+                                <button class="btn preview-btn" data-file="${file.file}" data-title="${file.title}">
+                                    <i class="fas fa-eye"></i>
+                                    Preview
+                                </button>
+                                <button class="btn download-btn" data-file="${file.file}">
+                                    <i class="fas fa-download"></i>
+                                    Download
+                                </button>
+                            ` : ''}
+                        </div>
+                    `;
+                    yearContent.appendChild(fileItem);
+                });
+
+                probablesListDiv.appendChild(yearSection);
+
+                yearHeader.addEventListener('click', () => {
+                    yearContent.classList.toggle('expanded');
+                    yearHeader.classList.toggle('collapsed');
+                });
+            });
+
+            // Add event listeners for preview and download buttons
+            document.querySelectorAll('.preview-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const file = event.currentTarget.dataset.file;
+                    const title = event.currentTarget.dataset.title;
+                    openPdfPreview(file, title);
+                });
+            });
+
+            document.querySelectorAll('.download-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const file = event.currentTarget.dataset.file;
+                    downloadPdf(file);
+                });
+            });
+        }
+
+        function openPdfPreview(file, title) {
+            const modal = document.getElementById('pdfPreviewModal');
+            const iframe = document.getElementById('pdfViewerFrame');
+            const modalTitle = document.getElementById('pdfModalTitle');
+
+            modalTitle.textContent = `Preview: ${title}`;
+            iframe.src = file; // Assuming Flask serves PDFs from static folder
+            modal.style.display = 'flex';
+        }
+
+        function downloadPdf(file) {
+            const link = document.createElement('a');
+            link.href = file;
+            link.download = file.split('/').pop(); // Get filename from path
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Close modal functionality
+        document.querySelector('.pdf-modal-close').addEventListener('click', () => {
+            document.getElementById('pdfPreviewModal').style.display = 'none';
+            document.getElementById('pdfViewerFrame').src = ''; // Clear iframe src
+        });
+
+        // Close modal if clicked clicked outside
+        window.addEventListener('click', (event) => {
+            const modal = document.getElementById('pdfPreviewModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+                document.getElementById('pdfViewerFrame').src = '';
+            }
+        });
+
+        // Search and Filter functionality
+        const searchInput = document.getElementById('searchInput');
+        const functionFilter = document.getElementById('functionFilter');
+        const typeFilter = document.getElementById('typeFilter');
+
+        function applyFilters() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const selectedFunction = functionFilter.value;
+            const selectedType = typeFilter.value;
+
+            const filteredData = probablesData.filter(item => {
+                const matchesSearch = item.title.toLowerCase().includes(searchTerm) ||
+                                      item.tags.some(tag => tag.toLowerCase().includes(searchTerm));
+                const matchesFunction = selectedFunction === 'all' || item.tags.includes(selectedFunction);
+                const matchesType = selectedType === 'all' || item.tags.includes(selectedType);
+                return matchesSearch && matchesFunction && matchesType;
+            });
+            renderProbables(filteredData);
+        }
+
+        searchInput.addEventListener('keyup', applyFilters);
+        functionFilter.addEventListener('change', applyFilters);
+        typeFilter.addEventListener('change', applyFilters);
+
+        // Initial render
+        renderProbables(probablesData);
+    </script>
+</body>
+</html>
+
