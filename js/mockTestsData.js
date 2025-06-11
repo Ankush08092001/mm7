@@ -99,9 +99,6 @@ const mockTestsData = [
     }
 ];
 
-// Make mockTestsData available globally
-window.mockTestsData = mockTestsData;
-
 // Export for use in other files
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = mockTestsData;

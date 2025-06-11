@@ -156,8 +156,54 @@
         .search-input {
             padding-left: 40px;
         }
+        
+        /* Tab styles similar to mock tests */
+        .study-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+        .study-tab {
+            padding: 12px 25px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            border: 1px solid #ddd;
+        }
+        .study-tab:first-child {
+            border-top-left-radius: var(--border-radius);
+            border-bottom-left-radius: var(--border-radius);
+        }
+        .study-tab:last-child {
+            border-top-right-radius: var(--border-radius);
+            border-bottom-right-radius: var(--border-radius);
+            border-left: none;
+        }
+        .study-tab.active {
+            background-color: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+        .study-tab:not(.active) {
+            background-color: #f5f5f5;
+            color: #555;
+        }
+        .study-tab:hover:not(.active) {
+            background-color: #eee;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
     </style>
 <script src="js/navigation.js" defer></script>
+<script src="js/studyMaterial.js" defer></script>
 </head>
 <body>
     <!-- Skip to content link for accessibility -->
@@ -214,207 +260,131 @@
         </div>
     </section>
 
-    <!-- Search and Filter Section -->
+    <!-- Study Material Tabs -->
     <section class="features">
         <div class="container">
-            <div class="section-title animate-on-scroll">
+            <div class="section-title animate-on-scroll animated">
                 <h2>Find the <span class="highlight">Perfect Resources</span></h2>
-                <p>Filter by function, author, or search for specific topics to find exactly what you need.</p>
+                <p>Filter by subject, function, author, or search for specific topics to find exactly what you need.</p>
             </div>
             
-            <div class="search-filter animate-on-scroll">
-                <div class="search-filter-grid">
-                    <div class="filter-group">
-                        <label for="search" class="filter-label">Search Materials</label>
-                        <div class="search-input-wrapper">
-                            <i class="fas fa-search search-icon"></i>
-                            <input type="text" id="search" class="filter-input search-input" placeholder="Search by title or topic...">
+            <!-- Tab Navigation -->
+            <div class="study-tabs animate-on-scroll animated">
+                <div class="study-tab active" data-tab="written">
+                    <i class="fas fa-book"></i>
+                    Written Study Material
+                </div>
+                <div class="study-tab" data-tab="orals">
+                    <i class="fas fa-microphone"></i>
+                    Orals Study Material
+                </div>
+            </div>
+
+            <!-- Written Study Material Tab Content -->
+            <div id="written-content" class="tab-content active">
+                <!-- Search and Filter Section for Written -->
+                <div class="search-filter animate-on-scroll animated">
+                    <div class="search-filter-grid">
+                        <div class="filter-group">
+                            <label for="written-search" class="filter-label">Search Materials</label>
+                            <div class="search-input-wrapper">
+                                <i class="fas fa-search search-icon"></i>
+                                <input type="text" id="written-search" class="filter-input search-input" placeholder="Search by title or topic...">
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <label for="function" class="filter-label">Function</label>
-                        <select id="function" class="filter-input">
-                            <option>All Functions</option>
-                            <option>Function 1</option>
-                            <option>Function 2</option>
-                            <option>Function 3</option>
-                            <option>Function 4A</option>
-                            <option>Function 4B</option>
-                            <option>Function 5</option>
-                            <option>Function 6</option>
-                            <option>Function 7</option>
-                        </select>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <label for="author" class="filter-label">Author</label>
-                        <div class="filter-action">
-                            <select id="author" class="filter-input">
-                                <option>All Authors</option>
-                                <option>Nanda Sir</option>
-                                <option>Rajeev Wad</option>
-                                <option>Sharma Sir</option>
-                                <option>Kapoor Sir</option>
+                        
+                        <div class="filter-group">
+                            <label for="written-subject" class="filter-label">Subject</label>
+                            <select id="written-subject" class="filter-input">
+                                <option value="">All Subjects</option>
+                                <option value="MEK-G">MEK-G</option>
+                                <option value="MEK-M">MEK-M</option>
+                                <option value="MET">MET</option>
+                                <option value="MEP">MEP</option>
+                                <option value="NAVAL">NAVAL</option>
+                                <option value="SSEP">SSEP</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="written-topic" class="filter-label">Topic</label>
+                            <select id="written-topic" class="filter-input">
+                                <option value="">All Topics</option>
+                                <!-- Topics will be populated dynamically based on subject -->
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="written-author" class="filter-label">Author</label>
+                            <select id="written-author" class="filter-input">
+                                <option value="">All Authors</option>
+                                <option value="MarineMonks">MarineMonks</option>
+                                <option value="Samraj">Samraj</option>
+                                <option value="Dieselship">Dieselship</option>
+                                <option value="Ankush Notes">Ankush Notes</option>
                             </select>
                         </div>
                     </div>
                 </div>
-                <div style="text-align: right; margin-top: 20px;">
-                    <button class="filter-btn pulse">
-                        <i class="fas fa-filter"></i> Apply Filters
-                    </button>
+
+                <!-- Written Study Material Cards -->
+                <div id="written-materials-grid" class="study-grid">
+                    <!-- Cards will be populated dynamically -->
                 </div>
             </div>
 
-            <!-- Study Material Cards -->
-            <div class="study-grid">
-                <!-- Study Material Card 1 -->
-                <div class="study-card animate-on-scroll">
-                    <div class="study-card-content">
-                        <div style="margin-bottom: 15px;">
-                            <span class="function-tag">Function 4B</span>
+            <!-- Orals Study Material Tab Content -->
+            <div id="orals-content" class="tab-content">
+                <!-- Search and Filter Section for Orals -->
+                <div class="search-filter animate-on-scroll animated">
+                    <div class="search-filter-grid">
+                        <div class="filter-group">
+                            <label for="orals-search" class="filter-label">Search Materials</label>
+                            <div class="search-input-wrapper">
+                                <i class="fas fa-search search-icon"></i>
+                                <input type="text" id="orals-search" class="filter-input search-input" placeholder="Search by question type or topic...">
+                            </div>
                         </div>
-                        <h3 class="study-card-title">Marine Engineering Fundamentals</h3>
-                        <p class="study-card-subtitle">Engine Room Operations</p>
-                        <p class="study-card-author">By Nanda Sir</p>
-                        <div class="study-card-meta">
-                            <span>245 pages</span>
-                            <span>1250 downloads</span>
+                        
+                        <div class="filter-group">
+                            <label for="orals-function" class="filter-label">Function</label>
+                            <select id="orals-function" class="filter-input">
+                                <option value="">All Functions</option>
+                                <option value="Function 3">Function 3 – Operation of ship & care of persons</option>
+                                <option value="Function 4B">Function 4B – Marine Engineering at Operational Level</option>
+                                <option value="Function 5">Function 5 – Electrical/Electronic/Control</option>
+                                <option value="Function 6">Function 6 – Maintenance and Repair</option>
+                            </select>
                         </div>
-                        <div class="study-card-actions">
-                            <a href="#" class="preview-btn">
-                                <i class="fas fa-eye"></i> Preview
-                            </a>
-                            <a href="#" class="download-btn">
-                                <i class="fas fa-download"></i> Download
-                            </a>
+                        
+                        <div class="filter-group">
+                            <label for="orals-topic" class="filter-label">Topic</label>
+                            <select id="orals-topic" class="filter-input">
+                                <option value="">All Topics</option>
+                                <option value="Emergency Situations">Emergency Situations</option>
+                                <option value="System Failures">System Failures</option>
+                                <option value="Sketch-based">Sketch-based</option>
+                            </select>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Study Material Card 2 -->
-                <div class="study-card animate-on-scroll">
-                    <div class="study-card-content">
-                        <div style="margin-bottom: 15px;">
-                            <span class="function-tag">Function 6</span>
-                        </div>
-                        <h3 class="study-card-title">Safety and Emergency Procedures</h3>
-                        <p class="study-card-subtitle">Safety Management</p>
-                        <p class="study-card-author">By Rajeev Wad</p>
-                        <div class="study-card-meta">
-                            <span>180 pages</span>
-                            <span>890 downloads</span>
-                        </div>
-                        <div class="study-card-actions">
-                            <a href="#" class="preview-btn">
-                                <i class="fas fa-eye"></i> Preview
-                            </a>
-                            <a href="#" class="download-btn">
-                                <i class="fas fa-download"></i> Download
-                            </a>
+                        
+                        <div class="filter-group">
+                            <label for="orals-author" class="filter-label">Author</label>
+                            <select id="orals-author" class="filter-input">
+                                <option value="">All Authors</option>
+                                <option value="MarineMonks">MarineMonks</option>
+                                <option value="Samraj">Samraj</option>
+                                <option value="Dieselship">Dieselship</option>
+                                <option value="Ankush Notes">Ankush Notes</option>
+                            </select>
                         </div>
                     </div>
                 </div>
 
-                <!-- Study Material Card 3 -->
-                <div class="study-card animate-on-scroll">
-                    <div class="study-card-content">
-                        <div style="margin-bottom: 15px;">
-                            <span class="function-tag">Function 3</span>
-                        </div>
-                        <h3 class="study-card-title">Auxiliary Machinery Operations</h3>
-                        <p class="study-card-subtitle">Machinery Operations</p>
-                        <p class="study-card-author">By Sharma Sir</p>
-                        <div class="study-card-meta">
-                            <span>320 pages</span>
-                            <span>1560 downloads</span>
-                        </div>
-                        <div class="study-card-actions">
-                            <a href="#" class="preview-btn">
-                                <i class="fas fa-eye"></i> Preview
-                            </a>
-                            <a href="#" class="download-btn">
-                                <i class="fas fa-download"></i> Download
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Study Material Card 4 -->
-                <div class="study-card animate-on-scroll">
-                    <div class="study-card-content">
-                        <div style="margin-bottom: 15px;">
-                            <span class="function-tag">Function 1</span>
-                        </div>
-                        <h3 class="study-card-title">Marine Propulsion Systems</h3>
-                        <p class="study-card-subtitle">Engine Room Operations</p>
-                        <p class="study-card-author">By Kapoor Sir</p>
-                        <div class="study-card-meta">
-                            <span>275 pages</span>
-                            <span>980 downloads</span>
-                        </div>
-                        <div class="study-card-actions">
-                            <a href="#" class="preview-btn">
-                                <i class="fas fa-eye"></i> Preview
-                            </a>
-                            <a href="#" class="download-btn">
-                                <i class="fas fa-download"></i> Download
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Study Material Card 5 -->
-                <div class="study-card animate-on-scroll">
-                    <div class="study-card-content">
-                        <div style="margin-bottom: 15px;">
-                            <span class="function-tag">Function 2</span>
-                        </div>
-                        <h3 class="study-card-title">Electrical Systems and Controls</h3>
-                        <p class="study-card-subtitle">Electrical Engineering</p>
-                        <p class="study-card-author">By Sharma Sir</p>
-                        <div class="study-card-meta">
-                            <span>210 pages</span>
-                            <span>1120 downloads</span>
-                        </div>
-                        <div class="study-card-actions">
-                            <a href="#" class="preview-btn">
-                                <i class="fas fa-eye"></i> Preview
-                            </a>
-                            <a href="#" class="download-btn">
-                                <i class="fas fa-download"></i> Download
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Study Material Card 6 -->
-                <div class="study-card animate-on-scroll">
-                    <div class="study-card-content">
-                        <div style="margin-bottom: 15px;">
-                            <span class="function-tag">Function 5</span>
-                        </div>
-                        <h3 class="study-card-title">Marine Pollution Prevention</h3>
-                        <p class="study-card-subtitle">Environmental Management</p>
-                        <p class="study-card-author">By Nanda Sir</p>
-                        <div class="study-card-meta">
-                            <span>195 pages</span>
-                            <span>760 downloads</span>
-                        </div>
-                        <div class="study-card-actions">
-                            <a href="#" class="preview-btn">
-                                <i class="fas fa-eye"></i> Preview
-                            </a>
-                            <a href="#" class="download-btn">
-                                <i class="fas fa-download"></i> Download
-                            </a>
-                        </div>
-                    </div>
+                <!-- Orals Study Material Cards -->
+                <div id="orals-materials-grid" class="study-grid">
+                    <!-- Cards will be populated dynamically -->
                 </div>
             </div>
-            
-            
         </div>
     </section>
     </main>
@@ -422,50 +392,39 @@
     <!-- Footer -->
     <footer>
         <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <a href="index.html" class="footer-logo">
-                        <img src="images/logo/logo-new.webp" alt="MarineMonks Logo" width="40" height="40" loading="lazy">
-                        <span>MarineMonks</span>
-                    </a>
-                    <p>India's premier marine engineering educational platform for MEO Class 4 exam preparation.</p>
-                    <div class="social-links">
-                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-                
-                <div class="footer-col">
-                    <h4>Quick Links</h4>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
                     <ul>
                         <li><a href="index.html">Home</a></li>
                         <li><a href="study-material.html">Study Material</a></li>
                         <li><a href="mock-tests.html">Mock Tests</a></li>
                         <li><a href="papers.html">Papers</a></li>
-                        <li><a href="probables.html">Probables</a></li>
                     </ul>
                 </div>
                 
-                <div class="footer-col">
-                    <h4>Legal</h4>
+                <div class="footer-section">
+                    <h3>Legal</h3>
                     <ul>
-                        <li><a href="#">Terms of Service</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Refund Policy</a></li>
-                        
+                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                        <li><a href="terms-of-service.html">Terms of Service</a></li>
+                        <li><a href="refund-policy.html">Refund Policy</a></li>
                     </ul>
                 </div>
                 
-                <div class="footer-col">
-                    <h4>Contact Us</h4>
-                    <ul class="contact-info">
-                        <li><i class="fas fa-envelope"></i> support@marinemonks.com</li>
-                        <li><i class="fas fa-phone"></i> +91 98765 43210</li>
-                        <li><i class="fas fa-map-marker-alt"></i> Mumbai, Maharashtra, India</li>
-                    </ul>
+                <div class="footer-section">
+                    <h3>Connect With Us</h3>
+                    <div class="social-links">
+                        <a href="#" aria-label="Follow us on Facebook">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" aria-label="Follow us on Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" aria-label="Follow us on LinkedIn">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
             
@@ -474,27 +433,6 @@
             </div>
         </div>
     </footer>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Animate on scroll elements
-            const animateOnScroll = function() {
-                const elements = document.querySelectorAll('.animate-on-scroll');
-                
-                elements.forEach(element => {
-                    const elementPosition = element.getBoundingClientRect().top;
-                    const windowHeight = window.innerHeight;
-                    
-                    if (elementPosition < windowHeight - 50) {
-                        element.classList.add('visible');
-                    }
-                });
-            };
-            
-            // Initial check and add scroll event listener
-            animateOnScroll();
-            window.addEventListener('scroll', animateOnScroll);
-        });
-    </script>
 </body>
 </html>
+

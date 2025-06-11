@@ -1,51 +1,35 @@
 <?php
-require_once 'config/db.php';
+session_start();
+require_once __DIR__ . "/config/db.php";
 
-$error = '';
-$success = '';
+$error_message = "";
+$success_message = "";
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = sanitizeInput($_POST['name']);
-    $email = sanitizeInput($_POST['email']);
-    $password = $_POST['password'];
-    $confirmPassword = $_POST['confirm_password'];
-    
-    // Validate input
-    if (empty($name) || empty($email) || empty($password) || empty($confirmPassword)) {
-        $error = 'All fields are required';
-    } elseif ($password !== $confirmPassword) {
-        $error = 'Passwords do not match';
-    } elseif (strlen($password) < 8) {
-        $error = 'Password must be at least 8 characters long';
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $username = $_POST["username"];
+    $email = $_POST["email"];
+    $password = $_POST["password"];
+    $confirm_password = $_POST["confirm_password"];
+
+    if ($password !== $confirm_password) {
+        $error_message = "Passwords do not match.";
     } else {
-        $conn = getDBConnection();
-        if ($conn) {
-            // Check if email already exists
-            $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
-            $stmt->bind_param("s", $email);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            
-            if ($result->num_rows > 0) {
-                $error = 'Email already registered';
-            } else {
-                // Create new user
-                $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-                $stmt = $conn->prepare("INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)");
-                $stmt->bind_param("sss", $name, $email, $passwordHash);
-                
-                if ($stmt->execute()) {
-                    $success = 'Registration successful! You can now login.';
-                } else {
-                    $error = 'Registration failed. Please try again.';
-                }
-            }
-            $stmt->close();
-            $conn->close();
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+        $stmt = $conn->prepare("INSERT INTO users (username, password_hash) VALUES (?, ?)");
+        $stmt->bind_param("ss", $username, $hashed_password);
+
+        if ($stmt->execute()) {
+            $success_message = "Account created successfully! You can now <a href=\"login.php\">login</a>.";
+        } else {
+            $error_message = "Error: " . $stmt->error;
         }
+        $stmt->close();
     }
 }
+$conn->close();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -53,145 +37,87 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - MarineMonks</title>
     <link rel="stylesheet" href="css/consolidated.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
-    <!-- Skip to content link for accessibility -->
-    <a href="#main-content" class="skip-link">Skip to main content</a>
-    
-    <!-- Header -->
     <header>
-        <div class="container">
-            <nav class="navbar">
-                <a href="index.html" class="logo" aria-label="MarineMonks Home">
-                    <img src="images/logo/logo-new.webp" alt="MarineMonks Logo" width="50" height="50">
-                    <span class="logo-text">MarineMonks</span>
-                </a>
-                
-                <div class="mobile-menu-toggle" aria-expanded="false" aria-label="Toggle navigation menu">
-                    <i class="fas fa-bars"></i>
-                </div>
-                
+        <nav>
+            <div class="container">
+                <a href="index.html" class="logo">MarineMonks</a>
                 <ul class="nav-links">
                     <li><a href="index.html">Home</a></li>
                     <li><a href="study-material.html">Study Material</a></li>
                     <li><a href="mock-tests.html">Mock Tests</a></li>
                     <li><a href="papers.html">Papers</a></li>
                     <li><a href="probables.html">Probables</a></li>
+                    <li><a href="login.php" class="btn btn-primary">Login</a></li>
+                    <li><a href="signup.php" class="btn btn-secondary">Sign Up</a></li>
                 </ul>
-            </nav>
-        </div>
+            </div>
+        </nav>
     </header>
 
-    <main>
-        <section class="auth-section" id="main-content">
-            <div class="container">
-                <div class="auth-card">
-                    <h1>Create Your Account</h1>
-                    
-                    <?php if ($error): ?>
-                        <div class="alert alert-error">
-                            <?php echo htmlspecialchars($error); ?>
-                        </div>
-                    <?php endif; ?>
-                    
-                    <?php if ($success): ?>
-                        <div class="alert alert-success">
-                            <?php echo htmlspecialchars($success); ?>
-                        </div>
-                    <?php endif; ?>
-                    
-                    <form method="POST" action="signup.php" class="auth-form">
-                        <div class="form-group">
-                            <label for="name">Full Name</label>
-                            <input type="text" id="name" name="name" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password" id="password" name="password" required>
-                            <small>Must be at least 8 characters long</small>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="confirm_password">Confirm Password</label>
-                            <input type="password" id="confirm_password" name="confirm_password" required>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary">Sign Up</button>
-                    </form>
-                    
-                    <div class="auth-links">
-                        <p>Already have an account? <a href="login.php">Login</a></p>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer>
+    <main class="signup-page">
         <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <a href="index.html" class="footer-logo">
-                        <img src="images/logo/logo-new.webp" alt="MarineMonks Logo" width="40" height="40">
-                        <span>MarineMonks</span>
-                    </a>
-                    <p>India's premier marine engineering educational platform for MEO Class 4 exam preparation.</p>
-                    <div class="social-links">
-                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            <div class="signup-form">
+                <h2>Create your account</h2>
+                <?php if (!empty($error_message)): ?>
+                    <p class="error-message"><?php echo $error_message; ?></p>
+                <?php endif; ?>
+                <?php if (!empty($success_message)): ?>
+                    <p class="success-message"><?php echo $success_message; ?></p>
+                <?php endif; ?>
+                <form action="signup.php" method="POST">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" placeholder="Your username" required>
                     </div>
-                </div>
-                
-                <div class="footer-col">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="study-material.html">Study Material</a></li>
-                        <li><a href="mock-tests.html">Mock Tests</a></li>
-                        <li><a href="papers.html">Papers</a></li>
-                        <li><a href="probables.html">Probables</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-col">
-                    <h4>Support</h4>
-                    <ul>
-                        <li><a href="contact.html">Contact Us</a></li>
-                        <li><a href="faq.html">FAQ</a></li>
-                        <li><a href="help.html">Help Center</a></li>
-                        <li><a href="feedback.html">Feedback</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-col">
-                    <h4>Legal</h4>
-                    <ul>
-                        <li><a href="privacy.html">Privacy Policy</a></li>
-                        <li><a href="terms.html">Terms of Service</a></li>
-                        <li><a href="refund.html">Refund Policy</a></li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="footer-bottom">
-                <p>&copy; 2025 MarineMonks. All rights reserved.</p>
+                    <div class="form-group">
+                        <label for="email">Email address</label>
+                        <input type="email" id="email" name="email" placeholder="you@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="••••••••" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm_password">Confirm password</label>
+                        <input type="password" id="confirm_password" name="confirm_password" placeholder="••••••••" required>
+                    </div>
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="terms" name="terms" required>
+                        <label for="terms">I agree to the <a href="terms-of-service.html">Terms of Service</a> and <a href="privacy-policy.html">Privacy Policy</a></label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create account</button>
+                </form>
+                <p>Already have an account? <a href="login.php">Login</a></p>
             </div>
         </div>
-    </footer>
+    </main>
 
-    <script src="js/navigation.js"></script>
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="study-material.html">Study Material</a></li>
+                    <li><a href="mock-tests.html">Mock Tests</a></li>
+                    <li><a href="papers.html">Papers</a></li>
+                </ul>
+                <ul>
+                    <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                    <li><a href="terms-of-service.html">Terms of Service</a></li>
+                    <li><a href="refund-policy.html">Refund Policy</a></li>
+                </ul>
+                <div class="social-media">
+                    <a href="#" aria-label="Follow us on Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Follow us on Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="Follow us on LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <p>&copy; 2025 MarineMonks. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
-</html> 
+</html>
+

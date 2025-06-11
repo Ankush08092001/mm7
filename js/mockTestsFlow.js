@@ -1,13 +1,8 @@
 // Mock Tests Flow JavaScript - Handles tab switching and test card rendering
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM Content Loaded');
-    
     // Tab switching functionality
     const testTabs = document.querySelectorAll('.test-tab');
     const testCardsContainer = document.querySelector('.grid');
-    
-    console.log('Test tabs found:', testTabs.length);
-    console.log('Test cards container found:', !!testCardsContainer);
     
     // Initialize with written tests active
     let currentTab = 'written';
@@ -15,7 +10,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add click event listeners to tabs
     testTabs.forEach(tab => {
         tab.addEventListener('click', function() {
-            console.log('Tab clicked:', this.textContent);
             // Remove active class from all tabs
             testTabs.forEach(t => t.classList.remove('active'));
             
@@ -36,15 +30,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Function to render test cards based on type
     function renderTestCards(type) {
-        console.log('Rendering test cards for type:', type);
-        if (!testCardsContainer) {
-            console.error('Test cards container not found!');
-            return;
-        }
+        if (!testCardsContainer) return;
         
         // Filter tests based on type
         const filteredTests = mockTestsData.filter(test => test.type === type);
-        console.log('Filtered tests:', filteredTests.length);
         
         // Clear existing cards
         testCardsContainer.innerHTML = '';
@@ -137,7 +126,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Initial render of written tests
-    console.log('Attempting initial render');
     renderTestCards('written');
     
     // Add hover effects to test cards

@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,7 +29,7 @@
     <header role="banner">
         <div class="container">
             <nav class="navbar" role="navigation" aria-label="Main navigation">
-                <a href="index.html" class="logo" aria-label="MarineMonks Home">
+                <a href="index.php" class="logo" aria-label="MarineMonks Home">
                     <img src="images/logo/logo-new.webp" alt="MarineMonks Logo" width="50" height="50" loading="lazy">
                     <span class="logo-text">MarineMonks</span>
                 </a>
@@ -36,16 +39,20 @@
                 </div>
                 
                 <ul class="nav-links" id="nav-links">
-                    <li><a href="index.html" class="active">Home</a></li>
-                    <li><a href="study-material.html">Study Material</a></li>
-                    <li><a href="mock-tests.html">Mock Tests</a></li>
+                    <li><a href="index.php" class="active">Home</a></li>
+                    <li><a href="study-material.php">Study Material</a></li>
+                    <li><a href="mock-tests.php">Mock Tests</a></li>
                     <li><a href="papers.html">Papers</a></li>
-                    <li><a href="probables.html">Probables</a></li>
+                    <li><a href="probables.php">Probables</a></li>
                 </ul>
                 
                 <div class="auth-buttons">
-                    <a href="login.html" class="btn btn-outline">Login</a>
-                    <a href="signup.html" class="btn btn-primary">Sign Up</a>
+                    <?php if (isset($_SESSION["user_id"])): ?>
+                        <a href="logout.php" class="btn btn-outline">Logout</a>
+                    <?php else: ?>
+                        <a href="login.php" class="btn btn-outline">Login</a>
+                        <a href="signup.php" class="btn btn-primary">Sign Up</a>
+                    <?php endif; ?>
                 </div>
             </nav>
         </div>
@@ -68,7 +75,7 @@
             </p>
             
             <div class="hero-buttons animate-fade-in delay-400">
-                <a href="signup.html" class="btn btn-primary">Start Learning Today</a>
+                <a href="signup.php" class="btn btn-primary">Start Learning Today</a>
             </div>
             
             <div class="stats">
@@ -333,13 +340,11 @@
     </section>
 
     <!-- CTA Section -->
-    <section class="cta" id="cta">
+    <section class="cta-section">
         <div class="container">
-            <div class="cta-content">
-                <h2>Ready to Ace Your MEO Class 4 Exams?</h2>
-                <p>Join thousands of successful marine engineers who trusted MarineMonks for their exam preparation.</p>
-                <a href="signup.html" class="btn btn-primary">Start Learning Today</a>
-            </div>
+            <h2>Ready to Ace Your MEO Class 4?</h2>
+            <p>Join MarineMonks today and unlock your full potential. Start your journey to success now!</p>
+            <a href="signup.php" class="btn btn-primary">Get Started Today</a>
         </div>
     </section>
     </main>
@@ -347,77 +352,43 @@
     <!-- Footer -->
     <footer role="contentinfo">
         <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <a href="index.html" class="footer-logo">
-                        <img src="images/logo/logo-new.webp" alt="MarineMonks Logo" width="40" height="40" loading="lazy">
-                        <span>MarineMonks</span>
-                    </a>
-                    <p>India's premier marine engineering educational platform for MEO Class 4 exam preparation.</p>
-                    <div class="social-links">
-                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-                
-                <div class="footer-col">
-                    <h4>Quick Links</h4>
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
                     <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="study-material.html">Study Material</a></li>
-                        <li><a href="mock-tests.html">Mock Tests</a></li>
+                        <li><a href="index.php">Home</a></li>
+                        <li><a href="study-material.php">Study Material</a></li>
+                        <li><a href="mock-tests.php">Mock Tests</a></li>
                         <li><a href="papers.html">Papers</a></li>
-                        <li><a href="probables.html">Probables</a></li>
+                        <li><a href="probables.php">Probables</a></li>
                     </ul>
                 </div>
-                
-                <div class="footer-col">
-                    <h4>Legal</h4>
+                <div class="footer-column">
+                    <h3>Legal</h3>
                     <ul>
-                        <li><a href="terms-of-service.html">Terms of Service</a></li>
                         <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                        <li><a href="terms-of-service.html">Terms of Service</a></li>
                         <li><a href="refund-policy.html">Refund Policy</a></li>
                     </ul>
                 </div>
-                
-                <div class="footer-col">
-                    <h4>Contact Us</h4>
-                    <ul class="contact-info">
-                        <li><i class="fas fa-envelope"></i> support@marinemonks.in</li>
-                        <li><i class="fas fa-map-marker-alt"></i> New Delhi, India</li>
-                    </ul>
+                <div class="footer-column">
+                    <h3>Connect With Us</h3>
+                    <div class="social-icons">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
                 </div>
             </div>
-            
             <div class="footer-bottom">
                 <p>&copy; 2025 MarineMonks. All rights reserved.</p>
+                <p>Made with <a href="https://www.google.com/search?q=Manus+Create+my+website" target="_blank">Manus Create my website</a></p>
             </div>
         </div>
     </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Animate on scroll elements
-            const animateOnScroll = function() {
-                const elements = document.querySelectorAll('.animate-on-scroll');
-                
-                elements.forEach(element => {
-                    const elementPosition = element.getBoundingClientRect().top;
-                    const windowHeight = window.innerHeight;
-                    
-                    if (elementPosition < windowHeight - 50) {
-                        element.classList.add('visible');
-                    }
-                });
-            };
-            
-            // Initial check and add scroll event listener
-            animateOnScroll();
-            window.addEventListener('scroll', animateOnScroll);
-        });
-    </script>
+    <script src="js/main.js"></script>
+    <script src="js/animations.js"></script>
 </body>
 </html>
+
