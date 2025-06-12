@@ -1,37 +1,25 @@
 <?php
 session_start();
+require_once __DIR__ . "/../config/db.php";
 
-// Check if admin is logged in
-if (!isset($_SESSION['admin_id'])) {
-    header('Location: login.php');
+// Check if user is logged in and is an admin (for now, just check if logged in)
+if (!isset($_SESSION["user_id"])) {
+    header("Location: ../login.php");
     exit();
 }
 
-// Include database configuration
-require_once '../config/database.php';
+// Fetch analytics data (dummy for now)
+$total_users = 100;
+$total_probables_views = 5000;
+$total_study_materials_views = 8000;
+$total_mock_tests_taken = 1200;
 
-// Get admin information
-$admin_id = $_SESSION['admin_id'];
-$stmt = $pdo->prepare("SELECT * FROM admin_users WHERE id = ?");
-$stmt->execute([$admin_id]);
-$admin = $stmt->fetch();
-
-// Get statistics
-$stats = [
-    'total_users' => $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn(),
-    'total_tests' => $pdo->query("SELECT COUNT(*) FROM mock_tests")->fetchColumn(),
-    'total_questions' => $pdo->query("SELECT COUNT(*) FROM questions")->fetchColumn(),
-    'total_results' => $pdo->query("SELECT COUNT(*) FROM test_results")->fetchColumn()
+// Fetch recent mock test submissions (dummy for now)
+$recent_submissions = [
+    ["id" => 1, "username" => "User A", "test_type" => "Easy", "status" => "Pending", "submitted_at" => "2025-06-10 10:00:00"],
+    ["id" => 2, "username" => "User B", "test_type" => "Medium", "status" => "Checked", "submitted_at" => "2025-06-09 15:30:00"],
 ];
 
-// Get recent activities
-$stmt = $pdo->query("
-    SELECT 'test_result' as type, created_at, user_id, test_id 
-    FROM test_results 
-    ORDER BY created_at DESC 
-    LIMIT 5
-");
-$recent_activities = $stmt->fetchAll();
 ?>
 
 <!DOCTYPE html>
@@ -39,156 +27,99 @@ $recent_activities = $stmt->fetchAll();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - IELTS Preparation Portal</title>
-    <link rel="stylesheet" href="css/admin.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Admin Dashboard - MarineMonks</title>
+    <link rel="stylesheet" href="../css/consolidated.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
-    <div class="admin-container">
-        <!-- Sidebar -->
-        <aside class="admin-sidebar">
-            <div class="admin-logo">
-                <img src="../assets/images/logo.png" alt="Logo">
-                <span>Admin Portal</span>
-            </div>
-            <nav>
-                <ul class="admin-nav">
-                    <li class="admin-nav-item">
-                        <a href="index.php" class="admin-nav-link active">
-                            <i class="fas fa-home"></i>
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="admin-nav-item">
-                        <a href="users.php" class="admin-nav-link">
-                            <i class="fas fa-users"></i>
-                            <span>Users</span>
-                        </a>
-                    </li>
-                    <li class="admin-nav-item">
-                        <a href="tests.php" class="admin-nav-link">
-                            <i class="fas fa-file-alt"></i>
-                            <span>Mock Tests</span>
-                        </a>
-                    </li>
-                    <li class="admin-nav-item">
-                        <a href="questions.php" class="admin-nav-link">
-                            <i class="fas fa-question-circle"></i>
-                            <span>Questions</span>
-                        </a>
-                    </li>
-                    <li class="admin-nav-item">
-                        <a href="results.php" class="admin-nav-link">
-                            <i class="fas fa-chart-bar"></i>
-                            <span>Results</span>
-                        </a>
-                    </li>
-                    <li class="admin-nav-item">
-                        <a href="settings.php" class="admin-nav-link">
-                            <i class="fas fa-cog"></i>
-                            <span>Settings</span>
-                        </a>
-                    </li>
+    <header>
+        <nav>
+            <div class="container">
+                <a href="../index.php" class="logo">MarineMonks</a>
+                <ul class="nav-links">
+                    <li><a href="../index.php">Home</a></li>
+                    <li><a href="../study-material.php">Study Material</a></li>
+                    <li><a href="../mock-tests.php">Mock Tests</a></li>
+                    <li><a href="../papers.html">Papers</a></li>
+                    <li><a href="../probables.php">Probables</a></li>
+                    <li><a href="../logout.php" class="btn btn-outline">Logout</a></li>
                 </ul>
-            </nav>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="admin-content">
-            <header class="admin-header">
-                <h1 class="admin-header-title">Dashboard</h1>
-                <div class="admin-header-actions">
-                    <span>Welcome, <?php echo htmlspecialchars($admin['username']); ?></span>
-                    <a href="logout.php" class="admin-btn admin-btn-danger">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </a>
-                </div>
-            </header>
-
-            <!-- Statistics -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon primary">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3><?php echo number_format($stats['total_users']); ?></h3>
-                        <p>Total Users</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon success">
-                        <i class="fas fa-file-alt"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3><?php echo number_format($stats['total_tests']); ?></h3>
-                        <p>Mock Tests</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon warning">
-                        <i class="fas fa-question-circle"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3><?php echo number_format($stats['total_questions']); ?></h3>
-                        <p>Questions</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon danger">
-                        <i class="fas fa-chart-bar"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3><?php echo number_format($stats['total_results']); ?></h3>
-                        <p>Test Results</p>
-                    </div>
-                </div>
             </div>
+        </nav>
+    </header>
 
-            <!-- Recent Activities -->
-            <div class="admin-card">
-                <div class="admin-card-header">
-                    <h2 class="admin-card-title">Recent Activities</h2>
+    <main class="admin-dashboard">
+        <div class="container">
+            <h2>Admin Dashboard</h2>
+
+            <section class="analytics-summary">
+                <h3>Analytics Summary</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h4>Total Users</h4>
+                        <p><?php echo $total_users; ?></p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Probables Views</h4>
+                        <p><?php echo $total_probables_views; ?></p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Study Materials Views</h4>
+                        <p><?php echo $total_study_materials_views; ?></p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Mock Tests Taken</h4>
+                        <p><?php echo $total_mock_tests_taken; ?></p>
+                    </div>
                 </div>
-                <table class="admin-table">
+            </section>
+
+            <section class="content-management">
+                <h3>Content Management</h3>
+                <div class="admin-actions">
+                    <a href="upload-probables.php" class="btn btn-primary">Upload Probables</a>
+                    <a href="upload-study-material.php" class="btn btn-primary">Upload Study Material</a>
+                    <a href="upload-mock-test.php" class="btn btn-primary">Upload Mock Test</a>
+                </div>
+            </section>
+
+            <section class="mock-test-submissions">
+                <h3>Recent Mock Test Submissions</h3>
+                <table>
                     <thead>
                         <tr>
-                            <th>Type</th>
+                            <th>ID</th>
                             <th>User</th>
-                            <th>Test</th>
-                            <th>Date</th>
+                            <th>Test Type</th>
+                            <th>Status</th>
+                            <th>Submitted At</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($recent_activities as $activity): 
-                            // Get user details
-                            $stmt = $pdo->prepare("SELECT username FROM users WHERE id = ?");
-                            $stmt->execute([$activity['user_id']]);
-                            $user = $stmt->fetch();
-
-                            // Get test details
-                            $stmt = $pdo->prepare("SELECT title FROM mock_tests WHERE id = ?");
-                            $stmt->execute([$activity['test_id']]);
-                            $test = $stmt->fetch();
-                        ?>
-                        <tr>
-                            <td>
-                                <span class="status-badge status-active">
-                                    Test Result
-                                </span>
-                            </td>
-                            <td><?php echo htmlspecialchars($user['username']); ?></td>
-                            <td><?php echo htmlspecialchars($test['title']); ?></td>
-                            <td><?php echo date('M d, Y H:i', strtotime($activity['created_at'])); ?></td>
-                        </tr>
+                        <?php foreach ($recent_submissions as $submission): ?>
+                            <tr>
+                                <td><?php echo $submission["id"]; ?></td>
+                                <td><?php echo $submission["username"]; ?></td>
+                                <td><?php echo $submission["test_type"]; ?></td>
+                                <td><?php echo $submission["status"]; ?></td>
+                                <td><?php echo $submission["submitted_at"]; ?></td>
+                                <td>
+                                    <a href="review-submission.php?id=<?php echo $submission["id"]; ?>" class="btn btn-sm btn-secondary">Review</a>
+                                </td>
+                            </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-            </div>
-        </main>
-    </div>
+            </section>
+        </div>
+    </main>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 MarineMonks. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 </html>
 

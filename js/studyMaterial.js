@@ -7,7 +7,7 @@ class StudyMaterialManager {
         this.filteredWrittenMaterials = [];
         this.filteredOralsMaterials = [];
         
-        this.backendUrl = '/backend/study_materials.php'; // Updated backend URL
+        this.backendUrl = 'https://5000-i2b851nfkjeiur2hq815x-3e49dc88.manus.computer'; // Exposed backend URL
         
         this.init();
         this.fetchMaterials();
@@ -84,7 +84,7 @@ class StudyMaterialManager {
             const selectedTopic = document.getElementById('written-topic').value;
             const selectedAuthor = document.getElementById('written-author').value;
 
-            url = `${this.backendUrl}/written_materials`;
+            url = `${this.backendUrl}/api/written_materials`;
             if (searchTerm) params.append('search', searchTerm);
             if (selectedSubject) params.append('subject', selectedSubject);
             if (selectedTopic) params.append('topic', selectedTopic);
@@ -96,7 +96,7 @@ class StudyMaterialManager {
             const selectedTopic = document.getElementById('orals-topic').value;
             const selectedAuthor = document.getElementById('orals-author').value;
 
-            url = `${this.backendUrl}/orals_materials`;
+            url = `${this.backendUrl}/api/orals_materials`;
             if (searchTerm) params.append('search', searchTerm);
             if (selectedFunction) params.append('function', selectedFunction);
             if (selectedTopic) params.append('topic', selectedTopic);
@@ -112,13 +112,13 @@ class StudyMaterialManager {
             
             if (type === 'written') {
                 this.writtenMaterials = data;
-                this.filteredWrittenMaterials = data;
+                this.filteredWrittenMaterials = data; // Initially, filtered is all
             } else {
                 this.oralsMaterials = data;
-                this.filteredOralsMaterials = data;
+                this.filteredOralsMaterials = data; // Initially, filtered is all
             }
             this.renderMaterials(type);
-            this.updateTopics(type);
+            this.updateTopics(type); // Update topics after fetching materials
         } catch (error) {
             console.error(`Error fetching ${type} materials:`, error);
             const gridId = type === 'written' ? 'written-materials-grid' : 'orals-materials-grid';
@@ -179,7 +179,7 @@ class StudyMaterialManager {
     renderMaterials(type) {
         const gridId = type === 'written' ? 'written-materials-grid' : 'orals-materials-grid';
         const grid = document.getElementById(gridId);
-        const materials = type === 'written' ? this.writtenMaterials : this.oralsMaterials;
+        const materials = type === 'written' ? this.writtenMaterials : this.oralsMaterials; // Render all fetched materials, filters are applied by backend
 
         grid.innerHTML = '';
 
@@ -250,12 +250,12 @@ class StudyMaterialManager {
     }
 
     previewMaterial(filePath) {
-        window.open(`${this.backendUrl}/download/${filePath.split('/').pop()}`, '_blank');
+        window.open(`${this.backendUrl}/api/download/${filePath.split('/').pop()}`, '_blank');
     }
 
     downloadMaterial(filePath) {
         const link = document.createElement('a');
-        link.href = `${this.backendUrl}/download/${filePath.split('/').pop()}`;
+        link.href = `${this.backendUrl}/api/download/${filePath.split('/').pop()}`;
         link.download = filePath.split('/').pop();
         document.body.appendChild(link);
         link.click();
