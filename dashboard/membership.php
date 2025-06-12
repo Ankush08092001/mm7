@@ -1,11 +1,10 @@
 <?php
 session_start();
-require_once __DIR__ . 
-'/../db.php';
+require_once __DIR__ . '/../db.php';
 
 // Check if user is logged in
 if (!isset($_SESSION["user_id"])) {
-    header('Location: ../login.php');
+    header('Location: /login.php');
     exit();
 }
 
@@ -15,7 +14,7 @@ $user = getRow("SELECT * FROM users WHERE id = ?", [$user_id]);
 
 if (!$user) {
     session_destroy();
-    header('Location: ../login.php');
+    header('Location: /login.php');
     exit();
 }
 
@@ -39,12 +38,12 @@ $unread_notifications_count = count(array_filter($notifications, function($n) { 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Membership Details - MarineMonks</title>
-    <link rel="stylesheet" href="../css/consolidated.css">
-    <link rel="stylesheet" href="../css/animations.css">
+    <title>Membership - MarineMonks</title>
+    <link rel="stylesheet" href="/css/consolidated.css">
+    <link rel="stylesheet" href="/css/animations.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
     <style>
         /* Custom styles for membership page */
         .membership-main {
