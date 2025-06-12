@@ -128,6 +128,26 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initial render of written tests
     renderTestCards('written');
     
+    // Add scroll animation handler
+    function handleScrollAnimations() {
+        const animatedElements = document.querySelectorAll('.animate-on-scroll');
+        
+        animatedElements.forEach(element => {
+            const elementTop = element.getBoundingClientRect().top;
+            const elementBottom = element.getBoundingClientRect().bottom;
+            const isVisible = (elementTop < window.innerHeight) && (elementBottom >= 0);
+            
+            if (isVisible) {
+                element.classList.add('visible');
+            }
+        });
+    }
+    
+    // Add scroll event listener
+    window.addEventListener('scroll', handleScrollAnimations);
+    // Initial check for elements in view
+    handleScrollAnimations();
+    
     // Add hover effects to test cards
     document.addEventListener('mouseover', function(e) {
         if (e.target.closest('.test-card')) {
