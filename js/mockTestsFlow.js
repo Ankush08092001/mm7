@@ -44,11 +44,20 @@ document.addEventListener('DOMContentLoaded', function() {
             testCardsContainer.appendChild(testCard);
         });
         
-        // Add animation class to new cards
+        // Add animation class to new cards with a slight delay
         const newCards = testCardsContainer.querySelectorAll('.test-card');
         newCards.forEach((card, index) => {
+            // Ensure the card is initially visible
+            card.style.visibility = 'visible';
+            card.style.opacity = '1';
+            
+            // Add animation class with delay
             setTimeout(() => {
                 card.classList.add('animate-on-scroll');
+                // Trigger reflow to ensure animation starts
+                void card.offsetWidth;
+                // Add visible class to start animation
+                card.classList.add('visible');
             }, index * 100);
         });
     }
@@ -130,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Add scroll animation handler
     function handleScrollAnimations() {
-        const animatedElements = document.querySelectorAll('.animate-on-scroll');
+        const animatedElements = document.querySelectorAll('.animate-on-scroll:not(.visible)');
         
         animatedElements.forEach(element => {
             const elementTop = element.getBoundingClientRect().top;
@@ -143,8 +152,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Add scroll event listener
-    window.addEventListener('scroll', handleScrollAnimations);
+    // Add scroll event listener with throttling
+    let scrollTimeout;
+    window.addEventListener('scroll', function() {
+        if (!scrollTimeout) {
+            scrollTimeout = setTimeout(function() {
+                handleScrollAnimations();
+                scrollTimeout = null;
+            }, 100);
+        }
+    });
+    
     // Initial check for elements in view
     handleScrollAnimations();
     
