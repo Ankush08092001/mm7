@@ -603,19 +603,15 @@
                     <div class="test-content">
                         <!-- Test Instructions -->
                         <div class="test-instructions">
-                            <h2 class="test-instructions-title">Instructions</h2>
+                            <h2 class="test-instructions-title">Test Instructions</h2>
                             <ul>
-                                <li>This test consists of 100 multiple-choice questions.</li>
-                                <li>The total duration for this test is 3 hours.</li>
-                                <li>Each question carries 1 mark. There is no negative marking.</li>
-                                <li>Select the most appropriate answer for each question.</li>
-                                <li>You can navigate between questions using the Previous/Next buttons or the question palette.</li>
-                                <li>Use the "Mark for Review" button if you want to revisit a question later.</li>
-                                <li>Your test will be automatically submitted when the timer runs out.</li>
-                                <li>Ensure you have a stable internet connection throughout the test.</li>
-                                <li>Click "Start Test" when you are ready to begin.</li>
+                                <li>This test consists of 50 multiple-choice questions.</li>
+                                <li>You have 90 minutes to complete the test.</li>
+                                <li>Each question carries 2 marks. There is no negative marking.</li>
+                                <li>You must score at least 70% to pass the test.</li>
+                                <li>You can review your answers before final submission.</li>
+                                <li>Do not refresh the page or navigate away during the test.</li>
                             </ul>
-                            <button class="dashboard-btn primary" style="margin-top: 15px;" id="start-test-btn">Start Test</button>
                         </div>
                         
                         <!-- Question Area (Initially Hidden) -->
@@ -627,80 +623,155 @@
                                     <button class="question-action-btn" id="clear-response-btn"><i class="fas fa-times"></i> Clear Response</button>
                                 </div>
                             </div>
-                            
-                            <p class="question-text" id="question-text">
-                                What is the primary purpose of a turbocharger in a marine diesel engine?
-                            </p>
-                            
-                            <div class="answer-options" id="answer-options">
-                                <div class="answer-option">
-                                    <input type="radio" id="optionA" name="answer" value="A">
-                                    <label for="optionA">A) To cool the engine cylinders</label>
+
+                            <div class="test-progress-card">
+                                <h3>Your Progress</h3>
+                                <div class="progress-stats">
+                                    <div class="progress-stat">
+                                        <span class="stat-value">25</span>
+                                        <span class="stat-label">Questions Answered</span>
+                                    </div>
+                                    <div class="progress-stat">
+                                        <span class="stat-value">25</span>
+                                        <span class="stat-label">Questions Remaining</span>
+                                    </div>
+                                    <div class="progress-stat">
+                                        <span class="stat-value">30:00</span>
+                                        <span class="stat-label">Time Remaining</span>
+                                    </div>
                                 </div>
-                                <div class="answer-option">
-                                    <input type="radio" id="optionB" name="answer" value="B">
-                                    <label for="optionB">B) To increase the power output by forcing more air into the cylinders</label>
-                                </div>
-                                <div class="answer-option">
-                                    <input type="radio" id="optionC" name="answer" value="C">
-                                    <label for="optionC">C) To reduce engine noise</label>
-                                </div>
-                                <div class="answer-option">
-                                    <input type="radio" id="optionD" name="answer" value="D">
-                                    <label for="optionD">D) To preheat the fuel before injection</label>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 50%;"></div>
                                 </div>
                             </div>
-                            
-                            <!-- Test Navigation -->
-                            <div class="test-navigation">
-                                <button class="test-nav-btn" id="prev-btn" disabled>Previous</button>
-                                <button class="test-nav-btn primary" id="next-btn">Next</button>
+                        </div>
+
+                        <div class="test-questions">
+                            <div class="question-card">
+                                <div class="question-header">
+                                    <span class="question-number">Question 1</span>
+                                    <span class="question-marks">2 marks</span>
+                                </div>
+                                <div class="question-content">
+                                    <p>What is the primary function of a marine diesel engine's fuel injection system?</p>
+                                </div>
+                                <div class="question-options">
+                                    <label class="option">
+                                        <input type="radio" name="q1" value="a">
+                                        <span class="option-text">To control engine speed</span>
+                                    </label>
+                                    <label class="option">
+                                        <input type="radio" name="q1" value="b">
+                                        <span class="option-text">To deliver fuel at high pressure</span>
+                                    </label>
+                                    <label class="option">
+                                        <input type="radio" name="q1" value="c">
+                                        <span class="option-text">To maintain engine temperature</span>
+                                    </label>
+                                    <label class="option">
+                                        <input type="radio" name="q1" value="d">
+                                        <span class="option-text">To lubricate engine components</span>
+                                    </label>
+                                </div>
                             </div>
+
+                            <div class="question-card">
+                                <div class="question-header">
+                                    <span class="question-number">Question 2</span>
+                                    <span class="question-marks">2 marks</span>
+                                </div>
+                                <div class="question-content">
+                                    <p>Which of the following is NOT a component of a marine boiler safety system?</p>
+                                </div>
+                                <div class="question-options">
+                                    <label class="option">
+                                        <input type="radio" name="q2" value="a">
+                                        <span class="option-text">Safety valve</span>
+                                    </label>
+                                    <label class="option">
+                                        <input type="radio" name="q2" value="b">
+                                        <span class="option-text">Water level indicator</span>
+                                    </label>
+                                    <label class="option">
+                                        <input type="radio" name="q2" value="c">
+                                        <span class="option-text">Fuel injection pump</span>
+                                    </label>
+                                    <label class="option">
+                                        <input type="radio" name="q2" value="d">
+                                        <span class="option-text">Pressure gauge</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="test-actions">
+                            <button class="btn secondary" onclick="saveProgress()">
+                                <i class="fas fa-save"></i> Save Progress
+                            </button>
+                            <button class="btn primary" onclick="submitTest()">
+                                <i class="fas fa-check"></i> Submit Test
+                            </button>
                         </div>
                     </div>
                     
                     <!-- Test Sidebar Section -->
                     <div class="test-sidebar">
-                        <!-- Test Info Card -->
-                        <div class="test-info-card">
-                            <h3 class="info-title">Test Information</h3>
-                            <div class="info-item">
-                                <span class="info-label">Time Remaining:</span>
-                                <span class="info-value timer" id="timer">03:00:00</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Total Questions:</span>
-                                <span class="info-value">100</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Answered:</span>
-                                <span class="info-value" id="answered-count">0</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Not Answered:</span>
-                                <span class="info-value" id="not-answered-count">100</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Marked for Review:</span>
-                                <span class="info-value" id="marked-count">0</span>
+                        <div class="timer-card">
+                            <h3>Time Remaining</h3>
+                            <div class="timer">30:00</div>
+                            <div class="timer-progress">
+                                <div class="timer-fill" style="width: 33%;"></div>
                             </div>
                         </div>
-                        
-                        <!-- Question Palette Card -->
-                        <div class="question-palette-card">
-                            <h3 class="palette-title">Question Palette</h3>
-                            <div class="palette-grid" id="palette-grid">
-                                <!-- Palette items will be generated by JavaScript -->
+
+                        <div class="question-navigator">
+                            <h3>Question Navigator</h3>
+                            <div class="question-grid">
+                                <button class="question-btn current">1</button>
+                                <button class="question-btn answered">2</button>
+                                <button class="question-btn">3</button>
+                                <button class="question-btn">4</button>
+                                <button class="question-btn">5</button>
+                                <button class="question-btn answered">6</button>
+                                <button class="question-btn">7</button>
+                                <button class="question-btn">8</button>
+                                <button class="question-btn">9</button>
+                                <button class="question-btn">10</button>
+                                <!-- More question buttons -->
                             </div>
-                            <div class="palette-legend">
-                                <div class="legend-item"><span class="legend-color-box" style="background-color: #e6f7ef; border-color: #a7f3d0;"></span> Answered</div>
-                                <div class="legend-item"><span class="legend-color-box" style="background-color: #fef3c7; border-color: #fde68a;"></span> Not Answered</div>
-                                <div class="legend-item"><span class="legend-color-box" style="background-color: #e0e7ff; border-color: #c7d2fe;"></span> Marked for Review</div>
-                                <div class="legend-item"><span class="legend-color-box" style="background-color: #f0f7ff; border-color: var(--primary-color);"></span> Current Question</div>
+                            <div class="navigator-legend">
+                                <div class="legend-item">
+                                    <span class="legend-color current"></span>
+                                    <span>Current</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-color answered"></span>
+                                    <span>Answered</span>
+                                </div>
+                                <div class="legend-item">
+                                    <span class="legend-color"></span>
+                                    <span>Not Visited</span>
+                                </div>
                             </div>
                         </div>
-                        
-                        <button class="submit-test-btn" id="submit-test-btn">Submit Test</button>
+
+                        <div class="test-summary">
+                            <h3>Test Summary</h3>
+                            <div class="summary-stats">
+                                <div class="summary-stat">
+                                    <span class="stat-label">Total Questions</span>
+                                    <span class="stat-value">50</span>
+                                </div>
+                                <div class="summary-stat">
+                                    <span class="stat-label">Answered</span>
+                                    <span class="stat-value">25</span>
+                                </div>
+                                <div class="summary-stat">
+                                    <span class="stat-label">Not Visited</span>
+                                    <span class="stat-value">25</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
