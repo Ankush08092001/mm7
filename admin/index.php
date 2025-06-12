@@ -1,10 +1,12 @@
 <?php
-require_once 'auth_check.php';
-requireAdminLogin();
-updateSessionExpiry();
+session_start();
+require_once __DIR__ . "/../config/db.php";
 
-// Get admin info
-$adminInfo = getAdminInfo();
+// Check if user is logged in and is an admin (for now, just check if logged in)
+if (!isset($_SESSION["user_id"])) {
+    header("Location: ../login.php");
+    exit();
+}
 
 // Fetch analytics data (dummy for now)
 $total_users = 100;
@@ -26,10 +28,8 @@ $recent_submissions = [
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - MarineMonks</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="../css/consolidated.css">
-    <link rel="stylesheet" href="../css/animations.css">
-    <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
     <header>
@@ -112,17 +112,6 @@ $recent_submissions = [
                     </tbody>
                 </table>
             </section>
-
-            <div class="user-actions">
-                <div class="notification-bell">
-                    <i class="fas fa-bell"></i>
-                    <span class="badge">3</span>
-                </div>
-                <div class="user-profile">
-                    <span class="admin-username"><?php echo htmlspecialchars($adminInfo['username']); ?></span>
-                    <a href="logout.php" class="logout-btn">Logout</a>
-                </div>
-            </div>
         </div>
     </main>
 

@@ -189,7 +189,7 @@
                     <p>Or <a href="signup.html">create a new account</a></p>
                 </div>
                 
-                <form action="dashboard/user-dashboard.html" method="POST" id="login-form">
+                <form action="#" method="POST" id="login-form">
                     <div class="form-group">
                         <label for="email" class="form-label">Email address</label>
                         <input type="email" id="email" name="email" class="form-input" placeholder="you@example.com" required>
@@ -313,7 +313,7 @@
                         // In a real application, this would send data to the server
                         console.log('Login attempt:', { email });
                         alert('Login successful! Redirecting to dashboard...');
-                        window.location.href = 'dashboard/user-dashboard.html';
+                        window.location.href = 'user-dashboard.html';
                     } else {
                         alert('Please fill in all fields');
                     }
