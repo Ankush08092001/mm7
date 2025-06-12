@@ -681,355 +681,167 @@
                 <div class="dashboard-header">
                     <h1 class="dashboard-title">My Tests</h1>
                     <div class="dashboard-actions">
-                        <a href="#" class="dashboard-btn secondary">
-                            <i class="fas fa-sort"></i> Sort
-                        </a>
-                        <a href="#" class="dashboard-btn primary">
-                            <i class="fas fa-plus"></i> Browse Tests
-                        </a>
+                        <a href="/mock-tests" class="dashboard-btn primary">Take New Test</a>
                     </div>
                 </div>
                 
                 <!-- Test Filters -->
                 <div class="test-filters">
                     <div class="filter-header">
-                        <h2 class="filter-title">Filters</h2>
-                        <a href="#" class="filter-reset">Reset All</a>
+                        <h2 class="filter-title">Filter Tests</h2>
+                        <a href="#" class="filter-reset">Reset Filters</a>
                     </div>
                     <div class="filter-options">
-                        <div class="filter-option active">All Tests</div>
-                        <div class="filter-option">Upcoming</div>
-                        <div class="filter-option">Completed</div>
-                        <div class="filter-option">In Progress</div>
-                        <div class="filter-option">MEO Class 4</div>
-                        <div class="filter-option">MEO Class 2</div>
-                        <div class="filter-option">MEO Class 1</div>
+                        <div class="filter-option">
+                            <select class="filter-select">
+                                <option value="">All Test Types</option>
+                                <option value="mek-g">MEK-G</option>
+                                <option value="function3">Function 3</option>
+                                <option value="function4">Function 4</option>
+                            </select>
+                        </div>
+                        <div class="filter-option">
+                            <select class="filter-select">
+                                <option value="">All Status</option>
+                                <option value="completed">Completed</option>
+                                <option value="pending">Pending</option>
+                                <option value="in-progress">In Progress</option>
+                            </select>
+                        </div>
+                        <div class="filter-option">
+                            <select class="filter-select">
+                                <option value="">All Difficulty</option>
+                                <option value="easy">Easy</option>
+                                <option value="medium">Medium</option>
+                                <option value="hard">Hard</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Test Schedule -->
-                <div class="test-schedule">
-                    <div class="schedule-header">
-                        <h2 class="schedule-title">Test Schedule</h2>
-                        <div class="schedule-view">
-                            <div class="schedule-view-option active">List</div>
-                            <div class="schedule-view-option">Calendar</div>
+                <!-- Test List -->
+                <div class="test-list">
+                    <!-- Completed Tests -->
+                    <div class="test-section">
+                        <h2 class="section-title">Completed Tests</h2>
+                        <div class="test-grid">
+                            <div class="test-card">
+                                <div class="test-header">
+                                    <h3>MEK-G Mock Test 1</h3>
+                                    <span class="test-badge completed">Completed</span>
+                                </div>
+                                <div class="test-info">
+                                    <p><i class="fas fa-calendar"></i> Completed on: March 15, 2024</p>
+                                    <p><i class="fas fa-clock"></i> Time taken: 45 minutes</p>
+                                    <p><i class="fas fa-chart-bar"></i> Score: 85/100</p>
+                                </div>
+                                <div class="test-actions">
+                                    <a href="/test-results/1" class="btn primary">View Results</a>
+                                    <a href="/test-review/1" class="btn secondary">Review Answers</a>
+                                </div>
+                            </div>
+
+                            <div class="test-card">
+                                <div class="test-header">
+                                    <h3>Function 3 Practice Test</h3>
+                                    <span class="test-badge completed">Completed</span>
+                                </div>
+                                <div class="test-info">
+                                    <p><i class="fas fa-calendar"></i> Completed on: March 10, 2024</p>
+                                    <p><i class="fas fa-clock"></i> Time taken: 60 minutes</p>
+                                    <p><i class="fas fa-chart-bar"></i> Score: 92/100</p>
+                                </div>
+                                <div class="test-actions">
+                                    <a href="/test-results/2" class="btn primary">View Results</a>
+                                    <a href="/test-review/2" class="btn secondary">Review Answers</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    
-                    <div class="schedule-calendar" style="display: none;">
-                        <div class="calendar-header">
-                            <div class="calendar-month">June 2025</div>
-                            <div class="calendar-nav">
-                                <div class="calendar-nav-btn"><i class="fas fa-chevron-left"></i></div>
-                                <div class="calendar-nav-btn"><i class="fas fa-chevron-right"></i></div>
+
+                    <!-- In Progress Tests -->
+                    <div class="test-section">
+                        <h2 class="section-title">In Progress</h2>
+                        <div class="test-grid">
+                            <div class="test-card">
+                                <div class="test-header">
+                                    <h3>MEK-G Final Test</h3>
+                                    <span class="test-badge in-progress">In Progress</span>
+                                </div>
+                                <div class="test-info">
+                                    <p><i class="fas fa-calendar"></i> Started on: March 5, 2024</p>
+                                    <p><i class="fas fa-clock"></i> Time remaining: 30 minutes</p>
+                                    <p><i class="fas fa-question-circle"></i> Questions completed: 25/50</p>
+                                </div>
+                                <div class="test-actions">
+                                    <a href="/continue-test/3" class="btn primary">Continue Test</a>
+                                    <button class="btn secondary" onclick="confirmAbort(3)">Abort Test</button>
+                                </div>
                             </div>
-                        </div>
-                        <div class="calendar-grid">
-                            <div class="calendar-day-header">Sun</div>
-                            <div class="calendar-day-header">Mon</div>
-                            <div class="calendar-day-header">Tue</div>
-                            <div class="calendar-day-header">Wed</div>
-                            <div class="calendar-day-header">Thu</div>
-                            <div class="calendar-day-header">Fri</div>
-                            <div class="calendar-day-header">Sat</div>
-                            
-                            <div class="calendar-day other-month">30</div>
-                            <div class="calendar-day other-month">31</div>
-                            <div class="calendar-day">1</div>
-                            <div class="calendar-day">2</div>
-                            <div class="calendar-day">3</div>
-                            <div class="calendar-day">4</div>
-                            <div class="calendar-day">5</div>
-                            
-                            <div class="calendar-day">6</div>
-                            <div class="calendar-day">7</div>
-                            <div class="calendar-day">8</div>
-                            <div class="calendar-day">9</div>
-                            <div class="calendar-day">10</div>
-                            <div class="calendar-day has-test">11</div>
-                            <div class="calendar-day">12</div>
-                            
-                            <div class="calendar-day">13</div>
-                            <div class="calendar-day">14</div>
-                            <div class="calendar-day">15</div>
-                            <div class="calendar-day today">16</div>
-                            <div class="calendar-day">17</div>
-                            <div class="calendar-day">18</div>
-                            <div class="calendar-day has-test">19</div>
-                            
-                            <div class="calendar-day">20</div>
-                            <div class="calendar-day">21</div>
-                            <div class="calendar-day has-test">22</div>
-                            <div class="calendar-day">23</div>
-                            <div class="calendar-day">24</div>
-                            <div class="calendar-day">25</div>
-                            <div class="calendar-day">26</div>
-                            
-                            <div class="calendar-day">27</div>
-                            <div class="calendar-day">28</div>
-                            <div class="calendar-day">29</div>
-                            <div class="calendar-day">30</div>
-                            <div class="calendar-day other-month">1</div>
-                            <div class="calendar-day other-month">2</div>
-                            <div class="calendar-day other-month">3</div>
                         </div>
                     </div>
-                    
-                    <ul class="schedule-list">
-                        <li class="schedule-item">
-                            <div class="schedule-date">
-                                <div class="schedule-day">11</div>
-                                <div class="schedule-month">Jun</div>
-                            </div>
-                            <div class="schedule-details">
-                                <div class="schedule-test-title">MEO Class 4 Mock Test</div>
-                                <div class="schedule-test-info">
-                                    <span><i class="fas fa-clock"></i> 10:00 AM</span>
-                                    <span><i class="fas fa-hourglass-half"></i> 3 Hours</span>
-                                    <span><i class="fas fa-question-circle"></i> 100 Questions</span>
+
+                    <!-- Upcoming Tests -->
+                    <div class="test-section">
+                        <h2 class="section-title">Upcoming Tests</h2>
+                        <div class="test-grid">
+                            <div class="test-card">
+                                <div class="test-header">
+                                    <h3>Function 4 Advanced Test</h3>
+                                    <span class="test-badge upcoming">Scheduled</span>
+                                </div>
+                                <div class="test-info">
+                                    <p><i class="fas fa-calendar"></i> Scheduled for: March 20, 2024</p>
+                                    <p><i class="fas fa-clock"></i> Duration: 90 minutes</p>
+                                    <p><i class="fas fa-question-circle"></i> Total questions: 75</p>
+                                </div>
+                                <div class="test-actions">
+                                    <button class="btn primary" disabled>Start Test</button>
+                                    <button class="btn secondary" onclick="rescheduleTest(4)">Reschedule</button>
                                 </div>
                             </div>
-                        </li>
-                        <li class="schedule-item">
-                            <div class="schedule-date">
-                                <div class="schedule-day">19</div>
-                                <div class="schedule-month">Jun</div>
-                            </div>
-                            <div class="schedule-details">
-                                <div class="schedule-test-title">Marine Safety Procedures Test</div>
-                                <div class="schedule-test-info">
-                                    <span><i class="fas fa-clock"></i> 2:00 PM</span>
-                                    <span><i class="fas fa-hourglass-half"></i> 2 Hours</span>
-                                    <span><i class="fas fa-question-circle"></i> 75 Questions</span>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="schedule-item">
-                            <div class="schedule-date">
-                                <div class="schedule-day">22</div>
-                                <div class="schedule-month">Jun</div>
-                            </div>
-                            <div class="schedule-details">
-                                <div class="schedule-test-title">Marine Engineering Systems Assessment</div>
-                                <div class="schedule-test-info">
-                                    <span><i class="fas fa-clock"></i> 9:30 AM</span>
-                                    <span><i class="fas fa-hourglass-half"></i> 4 Hours</span>
-                                    <span><i class="fas fa-question-circle"></i> 120 Questions</span>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
+                        </div>
+                    </div>
                 </div>
-                
-                <!-- Test Grid -->
-                <div class="tests-grid">
-                    <!-- Test Card 1 -->
-                    <div class="test-card">
-                        <div class="test-header">
-                            <div class="test-badge upcoming">Upcoming</div>
-                            <h3 class="test-title">MEO Class 4 Mock Test</h3>
-                            <p class="test-subtitle">Comprehensive assessment for MEO Class 4 examination</p>
-                        </div>
-                        <div class="test-content">
-                            <div class="test-info">
-                                <div class="test-info-item">
-                                    <i class="fas fa-calendar"></i>
-                                    <span>Jun 11, 2025</span>
-                                </div>
-                                <div class="test-info-item">
-                                    <i class="fas fa-clock"></i>
-                                    <span>3 Hours</span>
-                                </div>
-                                <div class="test-info-item">
-                                    <i class="fas fa-question-circle"></i>
-                                    <span>100 Questions</span>
-                                </div>
+
+                <!-- Test Statistics -->
+                <div class="test-statistics">
+                    <h2 class="section-title">Test Statistics</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-check-circle"></i>
                             </div>
-                            <div class="test-actions">
-                                <a href="user-test-detail.html" class="test-btn primary">View Details</a>
-                                <a href="#" class="test-btn secondary">Set Reminder</a>
+                            <div class="stat-info">
+                                <h3>Tests Completed</h3>
+                                <p class="stat-value">5</p>
                             </div>
                         </div>
-                    </div>
-                    
-                    <!-- Test Card 2 -->
-                    <div class="test-card">
-                        <div class="test-header">
-                            <div class="test-badge completed">Completed</div>
-                            <h3 class="test-title">Marine Diesel Engines Test</h3>
-                            <p class="test-subtitle">Assessment on marine diesel engine operations</p>
-                        </div>
-                        <div class="test-content">
-                            <div class="test-info">
-                                <div class="test-info-item">
-                                    <i class="fas fa-calendar-check"></i>
-                                    <span>May 28, 2025</span>
-                                </div>
-                                <div class="test-info-item">
-                                    <i class="fas fa-clock"></i>
-                                    <span>2 Hours</span>
-                                </div>
-                                <div class="test-info-item">
-                                    <i class="fas fa-question-circle"></i>
-                                    <span>75 Questions</span>
-                                </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-chart-line"></i>
                             </div>
-                            <div class="test-progress">
-                                <div class="progress-label">
-                                    <span class="progress-text">Score</span>
-                                    <span class="progress-percentage">85%</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill high" style="width: 85%;"></div>
-                                </div>
-                            </div>
-                            <div class="test-actions">
-                                <a href="#" class="test-btn primary">View Results</a>
-                                <a href="#" class="test-btn secondary">Retake</a>
+                            <div class="stat-info">
+                                <h3>Average Score</h3>
+                                <p class="stat-value">88%</p>
                             </div>
                         </div>
-                    </div>
-                    
-                    <!-- Test Card 3 -->
-                    <div class="test-card">
-                        <div class="test-header">
-                            <div class="test-badge in-progress">In Progress</div>
-                            <h3 class="test-title">Maritime Law Assessment</h3>
-                            <p class="test-subtitle">Test on maritime regulations and legal frameworks</p>
-                        </div>
-                        <div class="test-content">
-                            <div class="test-info">
-                                <div class="test-info-item">
-                                    <i class="fas fa-calendar"></i>
-                                    <span>Jun 5, 2025</span>
-                                </div>
-                                <div class="test-info-item">
-                                    <i class="fas fa-clock"></i>
-                                    <span>2.5 Hours</span>
-                                </div>
-                                <div class="test-info-item">
-                                    <i class="fas fa-question-circle"></i>
-                                    <span>90 Questions</span>
-                                </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
                             </div>
-                            <div class="test-progress">
-                                <div class="progress-label">
-                                    <span class="progress-text">Progress</span>
-                                    <span class="progress-percentage">45%</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill medium" style="width: 45%;"></div>
-                                </div>
-                            </div>
-                            <div class="test-actions">
-                                <a href="#" class="test-btn primary">Continue</a>
-                                <a href="#" class="test-btn secondary">Save for Later</a>
+                            <div class="stat-info">
+                                <h3>Total Time Spent</h3>
+                                <p class="stat-value">4.5 hours</p>
                             </div>
                         </div>
-                    </div>
-                    
-                    <!-- Test Card 4 -->
-                    <div class="test-card">
-                        <div class="test-header">
-                            <div class="test-badge completed">Completed</div>
-                            <h3 class="test-title">Marine Safety Procedures</h3>
-                            <p class="test-subtitle">Assessment on safety protocols and emergency procedures</p>
-                        </div>
-                        <div class="test-content">
-                            <div class="test-info">
-                                <div class="test-info-item">
-                                    <i class="fas fa-calendar-check"></i>
-                                    <span>May 15, 2025</span>
-                                </div>
-                                <div class="test-info-item">
-                                    <i class="fas fa-clock"></i>
-                                    <span>1.5 Hours</span>
-                                </div>
-                                <div class="test-info-item">
-                                    <i class="fas fa-question-circle"></i>
-                                    <span>60 Questions</span>
-                                </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-trophy"></i>
                             </div>
-                            <div class="test-progress">
-                                <div class="progress-label">
-                                    <span class="progress-text">Score</span>
-                                    <span class="progress-percentage">92%</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill high" style="width: 92%;"></div>
-                                </div>
-                            </div>
-                            <div class="test-actions">
-                                <a href="#" class="test-btn primary">View Results</a>
-                                <a href="#" class="test-btn secondary">Retake</a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Test Card 5 -->
-                    <div class="test-card">
-                        <div class="test-header">
-                            <div class="test-badge upcoming">Upcoming</div>
-                            <h3 class="test-title">Marine Engineering Systems</h3>
-                            <p class="test-subtitle">Assessment on advanced marine engineering systems</p>
-                        </div>
-                        <div class="test-content">
-                            <div class="test-info">
-                                <div class="test-info-item">
-                                    <i class="fas fa-calendar"></i>
-                                    <span>Jun 22, 2025</span>
-                                </div>
-                                <div class="test-info-item">
-                                    <i class="fas fa-clock"></i>
-                                    <span>4 Hours</span>
-                                </div>
-                                <div class="test-info-item">
-                                    <i class="fas fa-question-circle"></i>
-                                    <span>120 Questions</span>
-                                </div>
-                            </div>
-                            <div class="test-actions">
-                                <a href="#" class="test-btn primary">View Details</a>
-                                <a href="#" class="test-btn secondary">Set Reminder</a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Test Card 6 -->
-                    <div class="test-card">
-                        <div class="test-header">
-                            <div class="test-badge completed">Completed</div>
-                            <h3 class="test-title">Environmental Protection</h3>
-                            <p class="test-subtitle">Assessment on marine environmental regulations</p>
-                        </div>
-                        <div class="test-content">
-                            <div class="test-info">
-                                <div class="test-info-item">
-                                    <i class="fas fa-calendar-check"></i>
-                                    <span>May 5, 2025</span>
-                                </div>
-                                <div class="test-info-item">
-                                    <i class="fas fa-clock"></i>
-                                    <span>2 Hours</span>
-                                </div>
-                                <div class="test-info-item">
-                                    <i class="fas fa-question-circle"></i>
-                                    <span>80 Questions</span>
-                                </div>
-                            </div>
-                            <div class="test-progress">
-                                <div class="progress-label">
-                                    <span class="progress-text">Score</span>
-                                    <span class="progress-percentage">78%</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill medium" style="width: 78%;"></div>
-                                </div>
-                            </div>
-                            <div class="test-actions">
-                                <a href="#" class="test-btn primary">View Results</a>
-                                <a href="#" class="test-btn secondary">Retake</a>
+                            <div class="stat-info">
+                                <h3>Best Score</h3>
+                                <p class="stat-value">92%</p>
                             </div>
                         </div>
                     </div>
