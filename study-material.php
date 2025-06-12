@@ -316,7 +316,7 @@ session_start();
                     </div>
 
                     <!-- Materials Grid -->
-                    <div id="written-materials" class="materials-grid">
+                    <div id="written-materials-grid" class="materials-grid">
                         <!-- Materials will be loaded here -->
                     </div>
                 </div>
@@ -445,21 +445,51 @@ session_start();
         }
 
         function loadStudyMaterials(type) {
-            const params = new URLSearchParams({
-                action: 'study_materials',
-                type: type
-            });
+            const params = new URLSearchParams();
             
-            fetch(`backend/api.php?${params}`)
-                .then(response => response.json())
-                .then(data => {
-                    allMaterials[type] = data;
-                    displayMaterials(data, type);
-                })
-                .catch(error => {
-                    console.error('Error loading study materials:', error);
-                    document.getElementById(type + '-materials').innerHTML = '<p>Error loading materials. Please try again later.</p>';
-                });
+            if (type === 'written') {
+                const searchTerm = document.getElementById('written-search').value;
+                const selectedSubject = document.getElementById('written-subject').value;
+                const selectedTopic = document.getElementById('written-topic').value;
+                const selectedAuthor = document.getElementById('written-author').value;
+
+                if (searchTerm) params.append('search', searchTerm);
+                if (selectedSubject) params.append('subject', selectedSubject);
+                if (selectedTopic) params.append('topic', selectedTopic);
+                if (selectedAuthor) params.append('author', selectedAuthor);
+
+                fetch(`backend/study_materials.php/written_materials?${params}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        allMaterials[type] = data;
+                        displayMaterials(data, type);
+                    })
+                    .catch(error => {
+                        console.error('Error loading written materials:', error);
+                        document.getElementById(type + '-materials').innerHTML = '<p>Error loading materials. Please try again later.</p>';
+                    });
+            } else {
+                const searchTerm = document.getElementById('orals-search').value;
+                const selectedFunction = document.getElementById('orals-function').value;
+                const selectedTopic = document.getElementById('orals-topic').value;
+                const selectedAuthor = document.getElementById('orals-author').value;
+
+                if (searchTerm) params.append('search', searchTerm);
+                if (selectedFunction) params.append('function', selectedFunction);
+                if (selectedTopic) params.append('topic', selectedTopic);
+                if (selectedAuthor) params.append('author', selectedAuthor);
+
+                fetch(`backend/study_materials.php/orals_materials?${params}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        allMaterials[type] = data;
+                        displayMaterials(data, type);
+                    })
+                    .catch(error => {
+                        console.error('Error loading orals materials:', error);
+                        document.getElementById(type + '-materials').innerHTML = '<p>Error loading materials. Please try again later.</p>';
+                    });
+            }
         }
 
         function displayMaterials(materials, type) {
@@ -472,30 +502,57 @@ session_start();
 
             let html = '';
             materials.forEach(material => {
-                html += `
-                    <div class="study-card">
-                        <div class="study-card-content">
-                            <h3 class="study-card-title">${material.title}</h3>
-                            <div class="study-card-subtitle">
-                                <span class="function-tag">${material.subject_function}</span>
-                            </div>
-                            ${material.topic ? `<div class="study-card-subtitle">Topic: ${material.topic}</div>` : ''}
-                            ${material.author ? `<div class="study-card-author">By: ${material.author}</div>` : ''}
-                            <div class="study-card-meta">
-                                <span><i class="fas fa-eye"></i> ${material.views} views</span>
-                                <span><i class="fas fa-download"></i> ${material.downloads} downloads</span>
-                            </div>
-                            <div class="study-card-actions">
-                                <button class="preview-btn" onclick="previewPDF('${material.file_path}', '${material.title}', ${material.id})">
-                                    <i class="fas fa-eye"></i> Preview
-                                </button>
-                                <button class="download-btn" onclick="downloadPDF('${material.file_path}', '${material.title}', ${material.id})">
-                                    <i class="fas fa-download"></i> Download
-                                </button>
+                if (type === 'written') {
+                    html += `
+                        <div class="study-card">
+                            <div class="study-card-content">
+                                <h3 class="study-card-title">${material.title}</h3>
+                                <div class="study-card-subtitle">
+                                    <span class="function-tag">${material.subject}</span>
+                                </div>
+                                ${material.topic ? `<div class="study-card-subtitle">Topic: ${material.topic}</div>` : ''}
+                                ${material.author ? `<div class="study-card-author">By: ${material.author}</div>` : ''}
+                                <div class="study-card-meta">
+                                    <span>${material.pages || 'N/A'} pages</span>
+                                    <span><i class="fas fa-download"></i> ${material.downloads} downloads</span>
+                                </div>
+                                <div class="study-card-actions">
+                                    <button class="preview-btn" onclick="previewPDF('${material.file_path}', '${material.title}', ${material.id})">
+                                        <i class="fas fa-eye"></i> Preview
+                                    </button>
+                                    <button class="download-btn" onclick="downloadPDF('${material.file_path}', '${material.title}', ${material.id})">
+                                        <i class="fas fa-download"></i> Download
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                } else {
+                    html += `
+                        <div class="study-card">
+                            <div class="study-card-content">
+                                <h3 class="study-card-title">${material.question_type}</h3>
+                                <div class="study-card-subtitle">
+                                    <span class="function-tag">${material.function}</span>
+                                </div>
+                                ${material.topic ? `<div class="study-card-subtitle">Topic: ${material.topic}</div>` : ''}
+                                ${material.author ? `<div class="study-card-author">By: ${material.author}</div>` : ''}
+                                <div class="study-card-meta">
+                                    <span>Uploaded: ${new Date(material.upload_date).toLocaleDateString()}</span>
+                                    <span><i class="fas fa-download"></i> ${material.downloads} downloads</span>
+                                </div>
+                                <div class="study-card-actions">
+                                    <button class="preview-btn" onclick="previewPDF('${material.file_path}', '${material.question_type}', ${material.id})">
+                                        <i class="fas fa-eye"></i> Preview
+                                    </button>
+                                    <button class="download-btn" onclick="downloadPDF('${material.file_path}', '${material.question_type}', ${material.id})">
+                                        <i class="fas fa-download"></i> Download
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
             });
 
             container.innerHTML = html;
@@ -504,34 +561,15 @@ session_start();
         function setupFilterListeners() {
             // Written materials filters
             ['written-search', 'written-subject', 'written-topic', 'written-author'].forEach(id => {
-                document.getElementById(id).addEventListener('input', () => filterMaterials('written'));
-                document.getElementById(id).addEventListener('change', () => filterMaterials('written'));
+                document.getElementById(id).addEventListener('input', () => loadStudyMaterials('written'));
+                document.getElementById(id).addEventListener('change', () => loadStudyMaterials('written'));
             });
 
             // Orals materials filters
             ['orals-search', 'orals-function', 'orals-topic', 'orals-author'].forEach(id => {
-                document.getElementById(id).addEventListener('input', () => filterMaterials('orals'));
-                document.getElementById(id).addEventListener('change', () => filterMaterials('orals'));
+                document.getElementById(id).addEventListener('input', () => loadStudyMaterials('orals'));
+                document.getElementById(id).addEventListener('change', () => loadStudyMaterials('orals'));
             });
-        }
-
-        function filterMaterials(type) {
-            const search = document.getElementById(type + '-search').value.toLowerCase();
-            const subjectFunction = document.getElementById(type + (type === 'written' ? '-subject' : '-function')).value;
-            const topic = document.getElementById(type + '-topic').value;
-            const author = document.getElementById(type + '-author').value;
-
-            let filtered = allMaterials[type].filter(material => {
-                const matchesSearch = material.title.toLowerCase().includes(search) || 
-                                    (material.topic && material.topic.toLowerCase().includes(search));
-                const matchesSubjectFunction = !subjectFunction || material.subject_function === subjectFunction;
-                const matchesTopic = !topic || material.topic === topic;
-                const matchesAuthor = !author || material.author === author;
-
-                return matchesSearch && matchesSubjectFunction && matchesTopic && matchesAuthor;
-            });
-
-            displayMaterials(filtered, type);
         }
 
         function setupPDFModal() {
@@ -552,46 +590,20 @@ session_start();
         }
 
         function previewPDF(filePath, title, id) {
-            // Update view count
-            updateViewCount(id, 'study_materials');
-            
             // Show PDF in modal
             document.getElementById('pdfModalTitle').textContent = title;
-            document.getElementById('pdfViewerFrame').src = `uploads/study_materials/${filePath}`;
+            document.getElementById('pdfViewerFrame').src = `backend/study_materials.php/download/${filePath.split('/').pop()}`;
             document.getElementById('pdfPreviewModal').style.display = 'flex';
         }
 
         function downloadPDF(filePath, title, id) {
-            // Update download count
-            updateDownloadCount(id, 'study_materials');
-            
             // Trigger download
             const link = document.createElement('a');
-            link.href = `uploads/study_materials/${filePath}`;
+            link.href = `backend/study_materials.php/download/${filePath.split('/').pop()}`;
             link.download = title;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-        }
-
-        function updateViewCount(id, table) {
-            fetch('backend/api.php?action=update_view_count', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `id=${id}&table=${table}`
-            });
-        }
-
-        function updateDownloadCount(id, table) {
-            fetch('backend/api.php?action=update_download_count', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `id=${id}&table=${table}`
-            });
         }
     </script>
 </body>
