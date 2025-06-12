@@ -20,7 +20,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bind_param("ss", $username, $hashed_password);
 
         if ($stmt->execute()) {
-            $success_message = "Account created successfully! You can now <a href=\"login.php\">login</a>.";
+            $_SESSION["user_id"] = $stmt->insert_id;
+            $_SESSION["username"] = $username;
+            header("Location: dashboard/user-dashboard.html");
+            exit();
         } else {
             $error_message = "Error: " . $stmt->error;
         }

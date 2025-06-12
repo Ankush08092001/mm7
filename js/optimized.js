@@ -263,7 +263,7 @@ function initForms() {
         e.preventDefault(); // Prevent actual submission for demo
         console.log("Login attempt:", { email: this.querySelector("#email").value });
         alert("Login successful! Redirecting to dashboard...");
-        window.location.href = "user-dashboard.html";
+        window.location.href = "dashboard/user-dashboard.html";
       }
     });
   }
