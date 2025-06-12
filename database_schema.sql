@@ -1,15 +1,14 @@
 -- Create database if not exists
-CREATE DATABASE IF NOT EXISTS marinemonks;
-USE marinemonks;
+CREATE DATABASE IF NOT EXISTS u301363515_marinemonks;
+USE u301363515_marinemonks;
 
--- Admin users table
-CREATE TABLE IF NOT EXISTS admin_users (
+-- Users table
+CREATE TABLE IF NOT EXISTS users (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    role ENUM('super_admin', 'admin') NOT NULL DEFAULT 'admin',
-    last_login DATETIME,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    is_pro_member BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -18,111 +17,111 @@ CREATE TABLE IF NOT EXISTS admin_users (
 CREATE TABLE IF NOT EXISTS study_materials (
     id INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(255) NOT NULL,
-    type ENUM('written', 'orals') NOT NULL,
-    subject VARCHAR(100),
+    type ENUM('written', 'oral') NOT NULL,
+    subject VARCHAR(100) NOT NULL,
     function VARCHAR(100),
-    topic VARCHAR(255),
+    topic VARCHAR(100),
     author VARCHAR(100),
-    tags TEXT,
     file_path VARCHAR(255) NOT NULL,
-    is_coming_soon BOOLEAN DEFAULT FALSE,
-    is_pro_only BOOLEAN DEFAULT FALSE,
-    upload_count INT DEFAULT 0,
+    tags TEXT,
     download_count INT DEFAULT 0,
-    created_by INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (created_by) REFERENCES admin_users(id)
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Probables table
 CREATE TABLE IF NOT EXISTS probables (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    year INT NOT NULL,
     title VARCHAR(255) NOT NULL,
+    year INT NOT NULL,
     file_path VARCHAR(255) NOT NULL,
-    is_coming_soon BOOLEAN DEFAULT FALSE,
-    upload_count INT DEFAULT 0,
+    coming_soon BOOLEAN DEFAULT FALSE,
     download_count INT DEFAULT 0,
-    created_by INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (created_by) REFERENCES admin_users(id)
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Mock tests table
 CREATE TABLE IF NOT EXISTS mock_tests (
     id INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(255) NOT NULL,
-    type ENUM('probables_based', 'non_repeated', 'full_ability') NOT NULL,
-    file_path VARCHAR(255) NOT NULL,
-    reference_topic VARCHAR(255),
-    reference_subject VARCHAR(100),
-    status ENUM('active', 'scheduled', 'inactive') DEFAULT 'active',
-    scheduled_date DATETIME,
-    upload_count INT DEFAULT 0,
-    download_count INT DEFAULT 0,
-    created_by INT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (created_by) REFERENCES admin_users(id)
-);
-
--- Answer submissions table
-CREATE TABLE IF NOT EXISTS answer_submissions (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT NOT NULL,
-    mock_test_id INT NOT NULL,
-    file_path VARCHAR(255) NOT NULL,
-    status ENUM('pending', 'checked') DEFAULT 'pending',
-    marks INT,
-    feedback TEXT,
-    checked_by INT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (mock_test_id) REFERENCES mock_tests(id),
-    FOREIGN KEY (checked_by) REFERENCES admin_users(id)
-);
-
--- Users table (if not already exists)
-CREATE TABLE IF NOT EXISTS users (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    is_pro BOOLEAN DEFAULT FALSE,
-    subscription_end_date DATETIME,
+    test_type ENUM('probables', 'non_repeated', 'full_ability') NOT NULL,
+    question_path VARCHAR(255) NOT NULL,
+    duration INT NOT NULL COMMENT 'Duration in minutes',
+    is_pro_only BOOLEAN DEFAULT FALSE,
+    status ENUM('draft', 'active', 'archived') DEFAULT 'draft',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Analytics table
-CREATE TABLE IF NOT EXISTS analytics (
+-- Answer sheets table
+CREATE TABLE IF NOT EXISTS answersheets (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    content_type ENUM('study_material', 'probables', 'mock_test') NOT NULL,
-    content_id INT NOT NULL,
-    action_type ENUM('view', 'download') NOT NULL,
-    user_id INT,
-    ip_address VARCHAR(45),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    user_id INT NOT NULL,
+    test_id INT NOT NULL,
+    file_path VARCHAR(255) NOT NULL,
+    marks DECIMAL(5,2),
+    feedback TEXT,
+    status ENUM('pending', 'checked') DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (test_id) REFERENCES mock_tests(id) ON DELETE CASCADE
+);
+
+-- User materials table (for tracking downloads)
+CREATE TABLE IF NOT EXISTS user_materials (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    material_id INT NOT NULL,
+    material_type ENUM('study', 'probable') NOT NULL,
+    downloaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- User progress table
+CREATE TABLE IF NOT EXISTS user_progress (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    tests_attempted INT DEFAULT 0,
+    materials_downloaded INT DEFAULT 0,
+    last_activity TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- Settings table
 CREATE TABLE IF NOT EXISTS settings (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    setting_key VARCHAR(50) UNIQUE NOT NULL,
-    setting_value TEXT NOT NULL,
+    setting_key VARCHAR(50) NOT NULL UNIQUE,
+    setting_value TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Insert default admin user (password: admin123)
-INSERT INTO admin_users (username, password, email, role) 
-VALUES ('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin@marinemonks.in', 'super_admin');
-
 -- Insert default settings
 INSERT INTO settings (setting_key, setting_value) VALUES
-('upload_limit', '10'),
-('allowed_file_types', 'pdf,jpg,jpeg,png'),
-('max_file_size', '10485760'); -- 10MB in bytes
+('site_name', 'Marine Monks'),
+('site_description', 'Your Ultimate Exam Preparation Platform'),
+('site_url', 'https://marinemonks.in'),
+('admin_email', 'admin@marinemonks.in'),
+('support_email', 'support@marinemonks.in'),
+('maintenance_mode', 'false'),
+('registration_enabled', 'true'),
+('smtp_host', 'smtp.marinemonks.in'),
+('smtp_port', '587'),
+('smtp_username', 'noreply@marinemonks.in'),
+('smtp_password', ''),
+('smtp_encryption', 'tls');
+
+-- Create indexes for better performance
+CREATE INDEX idx_study_materials_type ON study_materials(type);
+CREATE INDEX idx_study_materials_subject ON study_materials(subject);
+CREATE INDEX idx_probables_year ON probables(year);
+CREATE INDEX idx_mock_tests_type ON mock_tests(test_type);
+CREATE INDEX idx_answersheets_status ON answersheets(status);
+CREATE INDEX idx_user_materials_type ON user_materials(material_type);
+
+-- Create admin user (password: admin123)
+INSERT INTO users (name, email, password_hash, is_pro_member) VALUES
+('Admin User', 'admin@marinemonks.in', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', TRUE);
 
