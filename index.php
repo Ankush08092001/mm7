@@ -1,5 +1,10 @@
 <?php
 session_start();
+// Redirect logged-in users to dashboard
+if (isset($_SESSION["user_id"])) {
+    header("Location: dashboard/user-dashboard.php");
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
